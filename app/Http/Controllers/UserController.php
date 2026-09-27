@@ -13,9 +13,6 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of users.
-     */
     public function index(Request $request)
     {
         $users = User::with(['company', 'branch', 'roles'])
@@ -27,27 +24,12 @@ class UserController extends Controller
             })
             ->when($request->company_id, function ($query) use ($request) {
                 $query->where('company_id', $request->company_id);
-            })
-            ->when($request->branch_id, function ($query) use ($request) {
+            })->when($request->branch_id, function ($query) use ($request) {
                 $query->where('branch_id', $request->branch_id);
-            })
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
-
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        $branches = Branch::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        return view('admin.users.index', compact(
-            'users',
-            'companies',
-            'branches'
-        ));
+            })->latest()->paginate(15)->withQueryString();
+        $companies = Company::where('status', true)->orderBy('name')->get();
+        $branches = Branch::where('status', true)->orderBy('name')->get();
+        return view('admin.users.index', compact( 'users', 'companies', 'branches'));
     }
 
     /**
@@ -55,19 +37,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        $branches = Branch::where('status', true)
-            ->with('company')
-            ->orderBy('name')
-            ->get();
-
-        $roles = Role::where('guard_name', 'web')
-            ->orderBy('name')
-            ->get();
-
+        $companies = Company::where('status', true)->orderBy('name')->get();
+        $branches = Branch::where('status', true)->with('company')->orderBy('name')->get();
+        $roles = Role::where('guard_name', 'web')->orderBy('name')->get();
         return view('admin.users.create', compact(
             'companies',
             'branches',
@@ -75,9 +47,6 @@ class UserController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created user.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -133,19 +102,12 @@ class UserController extends Controller
                 ->exists();
 
             if (!$branchBelongsToCompany) {
-                return back()
-                    ->withInput()
-                    ->withErrors([
+                return back()->withInput()->withErrors([
                         'branch_id' => 'Selected branch does not belong to the selected company.',
                     ]);
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Create User
-        |--------------------------------------------------------------------------
-        */
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -154,17 +116,8 @@ class UserController extends Controller
             'branch_id' => $validated['branch_id'] ?? null,
             'status' => $validated['status'],
         ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Assign Role
-        |--------------------------------------------------------------------------
-        */
         $user->assignRole($validated['role']);
-
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'User created successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -177,7 +130,6 @@ class UserController extends Controller
             'branch',
             'roles',
         ]);
-
         return view('admin.users.show', compact('user'));
     }
 
@@ -186,21 +138,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        $branches = Branch::where('status', true)
-            ->with('company')
-            ->orderBy('name')
-            ->get();
-
-        $roles = Role::where('guard_name', 'web')
-            ->orderBy('name')
-            ->get();
-
+        $companies = Company::where('status', true)->orderBy('name')->get();
+        $branches = Branch::where('status', true)->with('company')->orderBy('name')->get();
+        $roles = Role::where('guard_name', 'web')->orderBy('name')->get();
         $userRole = $user->roles->first()?->name;
-
         return view('admin.users.edit', compact(
             'user',
             'companies',
@@ -210,9 +151,6 @@ class UserController extends Controller
         ));
     }
 
-    /**
-     * Update the specified user.
-     */
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
@@ -257,11 +195,6 @@ class UserController extends Controller
             ],
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Branch must belong to selected company
-        |--------------------------------------------------------------------------
-        */
         if (!empty($validated['branch_id'])) {
             $branchBelongsToCompany = Branch::where('id', $validated['branch_id'])
                 ->where('company_id', $validated['company_id'])
@@ -276,11 +209,6 @@ class UserController extends Controller
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Update basic information
-        |--------------------------------------------------------------------------
-        */
         $data = [
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -288,28 +216,12 @@ class UserController extends Controller
             'branch_id' => $validated['branch_id'] ?? null,
             'status' => $validated['status'],
         ];
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update password only when provided
-        |--------------------------------------------------------------------------
-        */
         if (!empty($validated['password'])) {
             $data['password'] = Hash::make($validated['password']);
         }
-
         $user->update($data);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update Role
-        |--------------------------------------------------------------------------
-        */
         $user->syncRoles([$validated['role']]);
-
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'User updated successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
     /**
@@ -317,19 +229,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Prevent deleting currently logged-in user
-        |--------------------------------------------------------------------------
-        */
         if (auth()->id() === $user->id) {
             return back()->with('error', 'You cannot delete your own account.');
         }
-
         $user->delete();
-
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
 }

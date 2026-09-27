@@ -10,22 +10,9 @@ class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Clear Existing Cache
-        |--------------------------------------------------------------------------
-        */
-
-        app()[\Spatie\Permission\PermissionRegistrar::class]
-            ->forgetCachedPermissions();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Modules
-        |--------------------------------------------------------------------------
-        */
-
+        /* Clear Existing Cache */
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        /* Modules */
         $modules = [
             'dashboard',
             'company',
@@ -65,14 +52,7 @@ class RolePermissionSeeder extends Seeder
             'notification',
             'report',
         ];
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Actions
-        |--------------------------------------------------------------------------
-        */
-
+        /*Actions */
         $actions = [
             'view',
             'create',
@@ -83,34 +63,16 @@ class RolePermissionSeeder extends Seeder
             'payment',
             'export',
         ];
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Create Permissions
-        |--------------------------------------------------------------------------
-        */
-
+        /* Create Permissions */
         foreach ($modules as $module) {
-
             foreach ($actions as $action) {
-
                 Permission::firstOrCreate([
                     'name' => $module . '.' . $action,
                     'guard_name' => 'web',
                 ]);
-
             }
-
         }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Roles
-        |--------------------------------------------------------------------------
-        */
-
+        /*  Roles */
         $roles = [
             'Super Admin',
             'Company Admin',
@@ -127,15 +89,11 @@ class RolePermissionSeeder extends Seeder
             'Reception',
             'Viewer',
         ];
-
-
         foreach ($roles as $role) {
-
             Role::firstOrCreate([
                 'name' => $role,
                 'guard_name' => 'web',
             ]);
-
         }
     }
 }
