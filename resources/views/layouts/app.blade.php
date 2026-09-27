@@ -27,228 +27,219 @@
 
 
     <style>
+        
+        html {
+            scroll-behavior: smooth;
+        }
 
-  
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
 
+            background: #f8fafc;
+            color: #1e293b;
 
-/*
-|--------------------------------------------------------------------------
-| Base
-|--------------------------------------------------------------------------
-*/
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    overflow-x: hidden;
-
-    background: #f8fafc;
-    color: #1e293b;
-
-    font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-}
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
 
 
-/*
-|--------------------------------------------------------------------------
-| Alpine
-|--------------------------------------------------------------------------
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Alpine
+        |--------------------------------------------------------------------------
+        */
 
-[x-cloak] {
-    display: none !important;
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Selection
-|--------------------------------------------------------------------------
-*/
-
-::selection {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
+        [x-cloak] {
+            display: none !important;
+        }
 
 
-/*
-|--------------------------------------------------------------------------
-| Global Scrollbar
-|--------------------------------------------------------------------------
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Selection
+        |--------------------------------------------------------------------------
+        */
 
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 transparent;
-}
-
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
+        ::selection {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
 
 
-/*
-|--------------------------------------------------------------------------
-| Sidebar
-|--------------------------------------------------------------------------
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Global Scrollbar
+        |--------------------------------------------------------------------------
+        */
 
-.sidebar-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 transparent;
-}
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
 
-.sidebar-scroll::-webkit-scrollbar {
-    width: 5px;
-}
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
 
-.sidebar-scroll::-webkit-scrollbar-track {
-    background: transparent;
-}
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
-.sidebar-scroll::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 9999px;
-}
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
 
-.sidebar-scroll::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Page Animation
-|--------------------------------------------------------------------------
-*/
-
-.page-content {
-    animation: pageFadeIn 0.2s ease-in-out;
-}
-
-@keyframes pageFadeIn {
-
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-}
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
 
 
-/*
-|--------------------------------------------------------------------------
-| Tables
-|--------------------------------------------------------------------------
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Sidebar
+        |--------------------------------------------------------------------------
+        */
 
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
 
-    -webkit-overflow-scrolling: touch;
-}
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
 
-.table-responsive table {
-    min-width: 700px;
-}
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
 
-/*
-|--------------------------------------------------------------------------
-| ERP Card
-|--------------------------------------------------------------------------
-*/
-
-.erp-card {
-    width: 100%;
-
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-
-    background: #ffffff;
-}
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
 
 
-/*
-|--------------------------------------------------------------------------
-| Form Elements
-|--------------------------------------------------------------------------
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Page Animation
+        |--------------------------------------------------------------------------
+        */
 
-input,
-select,
-textarea {
-    max-width: 100%;
-}
+        .page-content {
+            animation: pageFadeIn 0.2s ease-in-out;
+        }
 
-input:focus,
-select:focus,
-textarea:focus {
-    outline: none;
-}
+        @keyframes pageFadeIn {
 
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
 
-/*
-|--------------------------------------------------------------------------
-| Mobile
-|--------------------------------------------------------------------------
-*/
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
-@media (max-width: 1023px) {
-
-    body.sidebar-open {
-        overflow: hidden;
-    }
-
-}
+        }
 
 
-/*
-|--------------------------------------------------------------------------
-| Small Mobile
-|--------------------------------------------------------------------------
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Tables
+        |--------------------------------------------------------------------------
+        */
 
-@media (max-width: 639px) {
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
 
-    .page-content {
-        padding-left: 0;
-        padding-right: 0;
-    }
+            -webkit-overflow-scrolling: touch;
+        }
 
-} 
+        .table-responsive table {
+            min-width: 700px;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ERP Card
+        |--------------------------------------------------------------------------
+        */
+
+        .erp-card {
+            width: 100%;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+
+            background: #ffffff;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Form Elements
+        |--------------------------------------------------------------------------
+        */
+
+        input,
+        select,
+        textarea {
+            max-width: 100%;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mobile
+        |--------------------------------------------------------------------------
+        */
+
+        @media (max-width: 1023px) {
+
+            body.sidebar-open {
+                overflow: hidden;
+            }
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Small Mobile
+        |--------------------------------------------------------------------------
+        */
+
+        @media (max-width: 639px) {
+
+            .page-content {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+        } 
 
 
 
