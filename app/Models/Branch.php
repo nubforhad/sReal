@@ -3,27 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Company extends Model
+class Branch extends Model
 {
     protected $fillable = [
+        'company_id',
         'name',
         'code',
         'phone',
         'email',
         'address',
-        'logo',
         'status',
     ];
-
     protected $casts = [
         'status' => 'boolean',
     ];
-
-    public function branches(): HasMany
+    public function company(): BelongsTo
     {
-        return $this->hasMany(Branch::class);
+        return $this->belongsTo(Company::class);
     }
-    
 }

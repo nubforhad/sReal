@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\BranchController;
-use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\CompanyController;
 
 Route::get('/', function () {
     return view('welcome');
