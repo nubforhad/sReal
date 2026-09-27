@@ -25,15 +25,9 @@
 </head>
 
 <body class="bg-slate-50 text-slate-800">
-
-    <div
-        x-data="{ sidebarOpen: false }"
-        class="min-h-screen"
-    >
-
+    <div  x-data="{ sidebarOpen: false }"  class="min-h-screen">
         {{-- Mobile Overlay --}}
-        <div
-            x-show="sidebarOpen"
+        <div x-show="sidebarOpen"
             x-cloak
             @click="sidebarOpen = false"
             class="fixed inset-0 z-40 bg-black/50 lg:hidden"
