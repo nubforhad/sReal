@@ -35,19 +35,16 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('nid_document')->nullable();
             $table->string('other_document')->nullable();
-
             // Nominee Information
             $table->string('nominee_name')->nullable();
             $table->string('nominee_relation')->nullable();
             $table->string('nominee_phone')->nullable();
             $table->string('nominee_nid')->nullable();
             $table->text('nominee_address')->nullable();
-
             // Nominee Documents
             $table->string('nominee_photo')->nullable();
             $table->string('nominee_nid_document')->nullable();
             $table->string('nominee_other_document')->nullable();
-
             // Status / Remarks
             $table->enum('status', [
                 'active',

@@ -5,132 +5,73 @@
 @section('content')
 
 <div class="max-w-5xl mx-auto space-y-6">
-
     {{-- Header --}}
-    <div class="flex flex-col sm:flex-row sm:items-center
-                sm:justify-between gap-4">
-
+    <div class="flex flex-col sm:flex-row sm:items-center  sm:justify-between gap-4">
         <div>
-
             <h1 class="text-2xl font-bold text-slate-800">
                 Edit Project
             </h1>
-
             <p class="text-sm text-slate-500 mt-1">
                 Update project information.
             </p>
-
         </div>
-
         <a href="{{ route('admin.projects.index') }}"
            class="inline-flex items-center justify-center gap-2
                   px-4 py-2.5 border border-slate-200
                   bg-white hover:bg-slate-50
                   text-slate-700 rounded-lg text-sm font-medium">
-
             <i class="bi bi-arrow-left"></i>
-
             Back
-
         </a>
-
     </div>
-
-
     {{-- Validation Errors --}}
     @if($errors->any())
-
-        <div class="bg-red-50 border border-red-200
-                    text-red-700 px-4 py-3 rounded-lg">
-
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             <ul class="list-disc list-inside text-sm space-y-1">
-
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
-
             </ul>
-
         </div>
-
     @endif
-
-
-    <form action="{{ route('admin.projects.update', $project) }}"
-          method="POST"
-          enctype="multipart/form-data"
-          class="space-y-6">
-
+    <form action="{{ route('admin.projects.update', $project) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
-
-
         {{-- Project Information --}}
         <div class="bg-white border border-slate-200 rounded-xl">
-
             <div class="px-5 py-4 border-b border-slate-200">
-
                 <h2 class="font-semibold text-slate-800">
                     Project Information
                 </h2>
-
             </div>
-
-
             <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
-
-
                 {{-- Company --}}
                 <div>
-
-                    <label class="block text-sm font-medium
-                                  text-slate-700 mb-1.5">
-
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
                         Company <span class="text-red-500">*</span>
-
                     </label>
-
-                    <select name="company_id"
-                            required
-                            class="w-full rounded-lg border-slate-200
-                                   focus:border-blue-500 focus:ring-blue-500">
-
+                    <select name="company_id"  required   class="w-full rounded-lg border-slate-200  focus:border-blue-500 focus:ring-blue-500">
                         <option value="">
                             Select Company
                         </option>
-
                         @foreach($companies as $company)
-
                             <option value="{{ $company->id }}"
                                 {{ old('company_id', $project->company_id) == $company->id ? 'selected' : '' }}>
-
                                 {{ $company->name }}
-
                             </option>
-
                         @endforeach
-
                     </select>
-
                     @error('company_id')
                         <p class="text-red-500 text-xs mt-1">
                             {{ $message }}
                         </p>
                     @enderror
-
                 </div>
-
-
                 {{-- Branch --}}
                 <div>
-
-                    <label class="block text-sm font-medium
-                                  text-slate-700 mb-1.5">
-
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
                         Branch <span class="text-red-500">*</span>
-
                     </label>
-
                     <select name="branch_id"
                             required
                             class="w-full rounded-lg border-slate-200
@@ -139,111 +80,71 @@
                         <option value="">
                             Select Branch
                         </option>
-
                         @foreach($branches as $branch)
-
                             <option value="{{ $branch->id }}"
                                 {{ old('branch_id', $project->branch_id) == $branch->id ? 'selected' : '' }}>
-
                                 {{ $branch->name }}
                                 — {{ $branch->company->name ?? '' }}
-
                             </option>
-
                         @endforeach
-
                     </select>
-
                     @error('branch_id')
                         <p class="text-red-500 text-xs mt-1">
                             {{ $message }}
                         </p>
                     @enderror
-
                 </div>
-
-
                 {{-- Project Code --}}
                 <div>
-
-                    <label class="block text-sm font-medium
-                                  text-slate-700 mb-1.5">
-
+                    <label class="block text-sm font-medium  text-slate-700 mb-1.5">
                         Project Code <span class="text-red-500">*</span>
-
                     </label>
-
                     <input type="text"
                            name="project_code"
                            value="{{ old('project_code', $project->project_code) }}"
                            required
                            class="w-full rounded-lg border-slate-200
                                   focus:border-blue-500 focus:ring-blue-500">
-
                     @error('project_code')
                         <p class="text-red-500 text-xs mt-1">
                             {{ $message }}
                         </p>
                     @enderror
-
                 </div>
-
-
                 {{-- Project Name --}}
                 <div>
-
                     <label class="block text-sm font-medium
                                   text-slate-700 mb-1.5">
-
                         Project Name <span class="text-red-500">*</span>
-
                     </label>
-
                     <input type="text"
                            name="project_name"
                            value="{{ old('project_name', $project->project_name) }}"
                            required
                            class="w-full rounded-lg border-slate-200
                                   focus:border-blue-500 focus:ring-blue-500">
-
                     @error('project_name')
                         <p class="text-red-500 text-xs mt-1">
                             {{ $message }}
                         </p>
                     @enderror
-
                 </div>
-
-
                 {{-- Project Type --}}
                 <div>
-
-                    <label class="block text-sm font-medium
-                                  text-slate-700 mb-1.5">
-
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">
                         Project Type
-
                     </label>
-
                     <input type="text"
                            name="project_type"
                            value="{{ old('project_type', $project->project_type) }}"
                            class="w-full rounded-lg border-slate-200
                                   focus:border-blue-500 focus:ring-blue-500">
-
                 </div>
-
-
                 {{-- Size --}}
                 <div>
-
-                    <label class="block text-sm font-medium
-                                  text-slate-700 mb-1.5">
-
+                    <label class="block text-sm font-medium  text-slate-700 mb-1.5">
                         Project Size
-
                     </label>
-
                     <input type="text"
                            name="size"
                            value="{{ old('size', $project->size) }}"

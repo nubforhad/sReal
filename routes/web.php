@@ -6,6 +6,8 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ClientController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,6 +32,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('companies', CompanyController::class);
     Route::resource('branches', BranchController::class);
     Route::resource('projects', ProjectController::class);
+    Route::resource('clients', ClientController::class);
 
 
 });

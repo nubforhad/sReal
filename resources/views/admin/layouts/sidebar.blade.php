@@ -126,9 +126,7 @@
 
 
 
-            {{-- =====================================
-                 COMPANY MANAGEMENT
-            ====================================== --}}
+            {{-- ==========  COMPANY MANAGEMENT ===== --}}
 
             <div
                 x-data="{
@@ -268,55 +266,23 @@
                 </button>
 
 
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
-                    <a
-                        href="{{ route('admin.users.index') }}"
-                        @click="sidebarOpen = false"
-                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm
-                            transition
-                            {{ request()->routeIs('admin.users.*')
-                                ? 'bg-blue-50 font-medium text-blue-700'
-                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
-                    >
+                <div x-show="open"  x-cloak  class="mt-1 space-y-1 pl-11" >
+                    <a href="{{ route('admin.users.index') }}"  @click="sidebarOpen = false"  class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm
+                            transition {{ request()->routeIs('admin.users.*')   ? 'bg-blue-50 font-medium text-blue-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                         <i class="bi bi-person-lines-fill"></i>
                         <span>Users</span>
                     </a>
-
                 </div>
-
             </div>
-
-
-
-            {{-- =====================================
-                 BUSINESS SECTION
-            ====================================== --}}
-
+            {{-- ===============  BUSINESS SECTION ======= --}}
             <div class="px-3 pb-1 pt-5">
-
-                <p
-                    class="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400"
-                >
+                <p class="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400" >
                     Business
                 </p>
-
             </div>
-
-
-
-            {{-- =====================================
-                 CLIENT MANAGEMENT
-            ====================================== --}}
-
+            {{-- ======= CLIENT MANAGEMENT====== --}}
             <div x-data="{ open: false }">
-
-                <button
-                    type="button"
+                <button type="button"
                     @click="open = !open"
                     class="group flex w-full items-center justify-between
                            rounded-xl px-3 py-2.5
@@ -324,7 +290,7 @@
                            transition hover:bg-slate-50 hover:text-slate-900"
                 >
 
-                    <span class="flex items-center gap-3">
+                    <!-- <span class="flex items-center gap-3">
 
                         <span
                             class="flex h-8 w-8 shrink-0 items-center justify-center
@@ -336,8 +302,19 @@
                         <span>
                             Client Management
                         </span>
-
-                    </span>
+                    </span> -->
+                    <a
+                        href="{{ route('admin.clients.index') }}"
+                        @click="sidebarOpen = false"
+                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm
+                            transition
+                            {{ request()->routeIs('admin.clients.*')
+                                ? 'bg-blue-50 font-medium text-blue-700'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
+                    >
+                        <i class="bi bi-person-vcard"></i>
+                        <span>clients</span>
+                    </a>
 
 
                     <i
