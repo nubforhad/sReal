@@ -290,7 +290,7 @@
                            transition hover:bg-slate-50 hover:text-slate-900"
                 >
 
-                    <!-- <span class="flex items-center gap-3">
+                    <span class="flex items-center gap-3">
 
                         <span
                             class="flex h-8 w-8 shrink-0 items-center justify-center
@@ -302,44 +302,25 @@
                         <span>
                             Client Management
                         </span>
-                    </span> -->
-                    <a
-                        href="{{ route('admin.clients.index') }}"
-                        @click="sidebarOpen = false"
-                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm
-                            transition
-                            {{ request()->routeIs('admin.clients.*')
-                                ? 'bg-blue-50 font-medium text-blue-700'
-                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}"
-                    >
-                        <i class="bi bi-person-vcard"></i>
-                        <span>clients</span>
-                    </a>
-
-
-                    <i
-                        class="bi bi-chevron-down text-[10px] text-slate-400
+                    </span>
+                    
+                    <i class="bi bi-chevron-down text-[10px] text-slate-400
                                transition-transform"
                         :class="{ 'rotate-180': open }"
                     ></i>
-
                 </button>
-
-
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
-                    <span
-                        class="block rounded-lg px-3 py-2 text-sm text-slate-400"
-                    >
+                <div x-show="open"  x-cloak class="mt-1 space-y-1 pl-11">
+                    <!-- <span class=" rounded-lg px-3 py-2 text-sm text-slate-400">
                         Clients
-                    </span>
-
+                    </span> -->
+                    <a href="{{ route('admin.clients.index') }}"  @click="sidebarOpen = false" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition
+                            {{ request()->routeIs('admin.clients.*')
+                                ? 'bg-blue-50 font-medium text-blue-700'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                        <i class="bi bi-person-vcard"></i>
+                        <span>clients</span>
+                    </a>
                 </div>
-
             </div>
 
 

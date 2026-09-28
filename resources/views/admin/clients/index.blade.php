@@ -59,46 +59,29 @@
 
     {{-- Filters --}}
     <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
-
         <div class="border-b border-slate-200 px-5 py-4">
             <div class="flex items-center gap-2">
-
                 <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
                     <i class="bi bi-funnel text-blue-600"></i>
                 </div>
-
                 <div>
                     <h2 class="font-semibold text-slate-800">
                         Search & Filter
                     </h2>
-
                     <p class="text-xs text-slate-500">
                         Find clients by name, phone, NID or project.
                     </p>
                 </div>
-
             </div>
         </div>
-
-
-        <form method="GET"
-              action="{{ route('admin.clients.index') }}"
-              class="p-5">
-
+        <form method="GET"  action="{{ route('admin.clients.index') }}"  class="p-5">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
-
-                {{-- Search --}}
                 <div class="lg:col-span-2">
-
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Search
                     </label>
-
                     <div class="relative">
-
-                        <i class="bi bi-search absolute left-3 top-1/2
-                                  -translate-y-1/2 text-slate-400"></i>
-
+                        <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                         <input type="text"
                                name="search"
                                value="{{ request('search') }}"
