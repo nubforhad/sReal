@@ -30,23 +30,19 @@ class Land extends Model
         'description',
         'remarks',
     ];
-
     protected $casts = [
         'purchase_date' => 'date',
         'total_land_size' => 'decimal:4',
         'purchase_price' => 'decimal:2',
     ];
-
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
-
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
-
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);

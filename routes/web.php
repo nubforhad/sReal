@@ -7,6 +7,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\LandController;
 
 
 Route::get('/', function () {
@@ -33,6 +34,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('branches', BranchController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('clients', ClientController::class);
+
+    Route::resource('lands', LandController::class);
 
 
 });

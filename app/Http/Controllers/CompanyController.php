@@ -12,7 +12,6 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::latest()->paginate(15);
-
         return view('admin.companies.index', compact('companies'));
     }
 
@@ -20,7 +19,6 @@ class CompanyController extends Controller
     {
         return view('admin.companies.create');
     }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -32,12 +30,8 @@ class CompanyController extends Controller
             'logo' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'boolean'],
         ]);
-
         Company::create($validated);
-
-        return redirect()
-            ->route('admin.companies.index')
-            ->with('success', 'Company created successfully.');
+        return redirect()->route('admin.companies.index')->with('success', 'Company created successfully.');
     }
 
     public function show(Company $company)
