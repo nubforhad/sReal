@@ -9,51 +9,25 @@
 >
 
 
-    {{-- =========================================
-         SIDEBAR HEADER
-    ========================================= --}}
+    {{-- ===========  SIDEBAR HEADER ======== --}}
 
-    <div
-        class="flex h-16 shrink-0 items-center
-               border-b border-slate-200 bg-white px-4"
-    >
-
-        <a
-            href="{{ route('dashboard') }}"
-            @click="sidebarOpen = false"
-            class="flex min-w-0 items-center gap-3"
-        >
-
+    <div class="flex h-16 shrink-0 items-center  border-b border-slate-200 bg-white px-4">
+        <a href="{{ route('dashboard') }}" @click="sidebarOpen = false" class="flex min-w-0 items-center gap-3">
             {{-- Logo --}}
-            <div
-                class="flex h-10 w-10 shrink-0 items-center justify-center
-                       rounded-xl bg-blue-600 text-white
-                       shadow-sm shadow-blue-200"
-            >
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-200">
                 <i class="bi bi-buildings-fill text-lg"></i>
             </div>
-
-
             {{-- Logo Text --}}
             <div class="min-w-0">
 
-                <h1
-                    class="truncate text-sm font-bold tracking-tight text-slate-800"
-                >
+                <h1 class="truncate text-sm font-bold tracking-tight text-slate-800">
                     Real Estate ERP
                 </h1>
-
-                <p
-                    class="truncate text-[11px] font-medium text-slate-400"
-                >
+                <p class="truncate text-[11px] font-medium text-slate-400">
                     Management System
                 </p>
-
             </div>
-
         </a>
-
-
         {{-- Mobile Close Button --}}
         <button
             type="button"
@@ -356,6 +330,24 @@
                                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
                             <i class="bi bi-person-vcard"></i>
                             <span> Lands </span>
+                        </a>
+                    </div>
+                    <div x-show="open"  x-cloak class="mt-1 space-y-1 pl-11">
+                        <a href="{{ route('admin.land-share-sales.index') }}"  @click="sidebarOpen = false" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition
+                                {{ request()->routeIs('admin.land-share-sales.*')
+                                    ? 'bg-blue-50 font-medium text-blue-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                            <i class="bi bi-person-vcard"></i>
+                            <span> Land Share Sales </span>
+                        </a>
+                    </div>
+                    <div x-show="open"  x-cloak class="mt-1 space-y-1 pl-11">
+                        <a href="{{ route('admin.land-share-payments.index') }}"  @click="sidebarOpen = false" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition
+                                {{ request()->routeIs('admin.land-share-payments.*')
+                                    ? 'bg-blue-50 font-medium text-blue-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                            <i class="bi bi-person-vcard"></i>
+                            <span> Land Share Payments </span>
                         </a>
                     </div>
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
