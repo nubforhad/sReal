@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LandController;
+use App\Http\Controllers\LandShareSaleController;
 
 
 Route::get('/', function () {
@@ -36,6 +37,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('clients', ClientController::class);
 
     Route::resource('lands', LandController::class);
+    Route::resource('land-share-sales', LandShareSaleController::class);
 
 
 });

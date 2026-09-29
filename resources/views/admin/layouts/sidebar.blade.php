@@ -325,14 +325,9 @@
 
 
 
-            {{-- =====================================
-                 LAND MANAGEMENT
-            ====================================== --}}
-
+            {{-- ===============   LAND MANAGEMENT ============== --}}
             <div x-data="{ open: false }">
-
-                <button
-                    type="button"
+                <button type="button"
                     @click="open = !open"
                     class="group flex w-full items-center justify-between
                            rounded-xl px-3 py-2.5
@@ -341,278 +336,136 @@
                 >
 
                     <span class="flex items-center gap-3">
-
-                        <span
-                            class="flex h-8 w-8 shrink-0 items-center justify-center
-                                   rounded-lg bg-slate-100 text-slate-500"
-                        >
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center  rounded-lg bg-slate-100 text-slate-500">
                             <i class="bi bi-map"></i>
                         </span>
-
                         <span>
                             Land Management
                         </span>
-
                     </span>
-
-
-                    <i
-                        class="bi bi-chevron-down text-[10px] text-slate-400
+                    <i class="bi bi-chevron-down text-[10px] text-slate-400
                                transition-transform"
                         :class="{ 'rotate-180': open }"
                     ></i>
-
                 </button>
-
-
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
-                    <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
-                        Land
-                    </span>
-
+                <div x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
+                    <div x-show="open"  x-cloak class="mt-1 space-y-1 pl-11">
+                        <a href="{{ route('admin.lands.index') }}"  @click="sidebarOpen = false" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition
+                                {{ request()->routeIs('admin.lands.*')
+                                    ? 'bg-blue-50 font-medium text-blue-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                            <i class="bi bi-person-vcard"></i>
+                            <span> Lands </span>
+                        </a>
+                    </div>
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Land Share Sale
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Land Share Payment
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Land Registration
                     </span>
-
                 </div>
-
             </div>
-
-
-
-            {{-- =====================================
-                 CONSTRUCTION
-            ====================================== --}}
+            {{-- ====  CONSTRUCTION ===== --}}
 
             <div x-data="{ open: false }">
-
-                <button
-                    type="button"
-                    @click="open = !open"
-                    class="group flex w-full items-center justify-between
-                           rounded-xl px-3 py-2.5
-                           text-sm font-medium text-slate-600
-                           transition hover:bg-slate-50 hover:text-slate-900"
-                >
-
+                <button type="button" @click="open = !open" class="group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
                     <span class="flex items-center gap-3">
-
-                        <span
-                            class="flex h-8 w-8 shrink-0 items-center justify-center
-                                   rounded-lg bg-slate-100 text-slate-500"
-                        >
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center  rounded-lg bg-slate-100 text-slate-500">  
                             <i class="bi bi-cone-striped"></i>
                         </span>
-
                         <span>
                             Construction
                         </span>
-
                     </span>
-
-
-                    <i
-                        class="bi bi-chevron-down text-[10px] text-slate-400
+                    <i class="bi bi-chevron-down text-[10px] text-slate-400
                                transition-transform"
                         :class="{ 'rotate-180': open }"
                     ></i>
-
                 </button>
-
-
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
+                <div  x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Buildings
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Floors
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Flats
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Construction Cost
                     </span>
-
                 </div>
-
             </div>
-
-
-
-            {{-- =====================================
-                 SALES
-            ====================================== --}}
-
+            {{-- ======== SALES ============ --}}
             <div x-data="{ open: false }">
-
-                <button
-                    type="button"
-                    @click="open = !open"
-                    class="group flex w-full items-center justify-between
-                           rounded-xl px-3 py-2.5
-                           text-sm font-medium text-slate-600
-                           transition hover:bg-slate-50 hover:text-slate-900"
-                >
-
+                <button  type="button" @click="open = !open" class="group flex w-full items-center justify-between rounded-xl px-3 py-2.5  text-sm font-medium text-slate-600  transition hover:bg-slate-50 hover:text-slate-900">
                     <span class="flex items-center gap-3">
-
-                        <span
-                            class="flex h-8 w-8 shrink-0 items-center justify-center
-                                   rounded-lg bg-slate-100 text-slate-500"
-                        >
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
                             <i class="bi bi-cart-check"></i>
                         </span>
-
                         <span>
                             Sales & Allocation
                         </span>
-
                     </span>
-
-
-                    <i
-                        class="bi bi-chevron-down text-[10px] text-slate-400
-                               transition-transform"
-                        :class="{ 'rotate-180': open }"
-                    ></i>
-
+                    <i  class="bi bi-chevron-down text-[10px] text-slate-400 transition-transform" :class="{ 'rotate-180': open }"></i>
                 </button>
-
-
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
+                <div x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Installments
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Payment Points
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Flat Choice
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Flat Allocation
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Agreements
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Handover
                     </span>
-
                 </div>
-
             </div>
-
-
-
-            {{-- =====================================
-                 FINANCE
-            ====================================== --}}
-
+            {{-- =========  FINANCE ======= --}}
             <div x-data="{ open: false }">
-
-                <button
-                    type="button"
-                    @click="open = !open"
-                    class="group flex w-full items-center justify-between
-                           rounded-xl px-3 py-2.5
-                           text-sm font-medium text-slate-600
-                           transition hover:bg-slate-50 hover:text-slate-900"
-                >
-
+                <button type="button" @click="open = !open" class="group flex w-full items-center justify-between rounded-xl px-3 py-2.5  text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
                     <span class="flex items-center gap-3">
-
-                        <span
-                            class="flex h-8 w-8 shrink-0 items-center justify-center
-                                   rounded-lg bg-slate-100 text-slate-500"
-                        >
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
                             <i class="bi bi-cash-stack"></i>
                         </span>
-
                         <span>
                             Finance
                         </span>
-
                     </span>
-
-
-                    <i
-                        class="bi bi-chevron-down text-[10px] text-slate-400
-                               transition-transform"
-                        :class="{ 'rotate-180': open }"
-                    ></i>
-
+                    <i class="bi bi-chevron-down text-[10px] text-slate-400  transition-transform" :class="{ 'rotate-180': open }"></i>
                 </button>
-
-
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
+                <div x-show="open"  x-cloak class="mt-1 space-y-1 pl-11">
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Payments
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Income
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Expenses
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Finance Reports
                     </span>
-
                 </div>
-
             </div>
-
-
-
-            {{-- =====================================
-                 HR
-            ====================================== --}}
-
+            {{-- =========  HR ======== --}}
             <div x-data="{ open: false }">
-
-                <button
-                    type="button"
+                <button type="button"
                     @click="open = !open"
                     class="group flex w-full items-center justify-between
                            rounded-xl px-3 py-2.5
@@ -621,137 +474,65 @@
                 >
 
                     <span class="flex items-center gap-3">
-
-                        <span
-                            class="flex h-8 w-8 shrink-0 items-center justify-center
-                                   rounded-lg bg-slate-100 text-slate-500"
-                        >
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
                             <i class="bi bi-person-badge"></i>
                         </span>
-
                         <span>
                             HR & Payroll
                         </span>
-
                     </span>
-
-
-                    <i
-                        class="bi bi-chevron-down text-[10px] text-slate-400
+                    <i class="bi bi-chevron-down text-[10px] text-slate-400
                                transition-transform"
                         :class="{ 'rotate-180': open }"
                     ></i>
-
                 </button>
-
-
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
+                <div x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Employees
                     </span>
-
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Payroll
                     </span>
-
                 </div>
-
             </div>
-
-
-
-            {{-- =====================================
-                 REPORTS
-            ====================================== --}}
-
-            <a
-                href="#"
-                @click="sidebarOpen = false"
-                class="group flex items-center gap-3 rounded-xl px-3 py-2.5
-                       text-sm font-medium text-slate-600
-                       transition hover:bg-slate-50 hover:text-slate-900"
-            >
-
-                <span
-                    class="flex h-8 w-8 shrink-0 items-center justify-center
-                           rounded-lg bg-slate-100 text-slate-500"
-                >
+            {{-- ======= REPORTS ============ --}}
+            <a href="#" @click="sidebarOpen = false"
+                class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
                     <i class="bi bi-bar-chart-line"></i>
                 </span>
-
                 <span>
                     Reports
                 </span>
-
             </a>
-
-
-
             {{-- Divider --}}
             <div class="my-4 border-t border-slate-100"></div>
-
-
-
-            {{-- =====================================
-                 SETTINGS
-            ====================================== --}}
-
-            <a
-                href="#"
-                @click="sidebarOpen = false"
+            {{-- ======== SETTINGS ====== --}}
+            <a href="#" @click="sidebarOpen = false"
                 class="group flex items-center gap-3 rounded-xl px-3 py-2.5
                        text-sm font-medium text-slate-600
-                       transition hover:bg-slate-50 hover:text-slate-900"
-            >
-
-                <span
-                    class="flex h-8 w-8 shrink-0 items-center justify-center
+                       transition hover:bg-slate-50 hover:text-slate-900">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center
                            rounded-lg bg-slate-100 text-slate-500"
                 >
                     <i class="bi bi-gear"></i>
                 </span>
-
                 <span>
                     Settings
                 </span>
-
             </a>
-
-
             {{-- Extra Bottom Space --}}
             <div class="h-4"></div>
-
         </nav>
-
     </div>
-
-
-
-    {{-- =========================================
-         SIDEBAR FOOTER
-    ========================================= --}}
-
+    {{-- ==============  SIDEBAR FOOTER ==== --}}
     <div class="shrink-0 border-t border-slate-200 bg-white p-3">
-
         <div class="rounded-xl bg-slate-50 px-3 py-2.5">
-
             <div class="flex items-center gap-2.5">
-
-                <div
-                    class="flex h-9 w-9 shrink-0 items-center justify-center
-                           rounded-lg bg-blue-100 text-blue-600"
-                >
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
                     <i class="bi bi-shield-check"></i>
                 </div>
-
-
                 <div class="min-w-0">
-
                     <p class="truncate text-xs font-semibold text-slate-700">
                         {{ auth()->user()->getRoleNames()->first() ?? 'User' }}
                     </p>
@@ -759,13 +540,8 @@
                     <p class="text-[10px] text-slate-400">
                         Access Level
                     </p>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </aside>
