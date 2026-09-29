@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LandShareSale extends Model
 {
@@ -48,4 +49,40 @@ class LandShareSale extends Model
     {
         return $this->belongsTo(Client::class);
     }
+    public function payments(): HasMany
+    {
+        return $this->hasMany(LandSharePayment::class);
+    }
+
+    public function getPaidAmountAttribute(): float
+    {
+        return (float) $this->payments()->sum('amount');
+    }
+
+    public function getDueAmountAttribute(): float
+    {
+        return max(
+            0,
+            (float) $this->land_share_price - $this->paid_amount
+        );
+    }
+
+    public function getPaymentPercentageAttribute(): float
+    {
+        if ((float) $this->land_share_price <= 0) {
+            return 0;
+        }
+
+        return min(
+            100,
+            ($this->paid_amount / (float) $this->land_share_price) * 100
+        );
+    }
+
+    public function getRegistrationEligibleAttribute(): bool
+    {
+        return $this->paid_amount >= (float) $this->land_share_price;
+    }
+
+
 }
