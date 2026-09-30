@@ -10,6 +10,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LandController;
 use App\Http\Controllers\LandShareSaleController;
 use App\Http\Controllers\LandSharePaymentController;
+use App\Http\Controllers\LandRegistrationController;
 
 
 Route::get('/', function () {
@@ -40,6 +41,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('lands', LandController::class);
     Route::resource('land-share-sales', LandShareSaleController::class);
     Route::resource('land-share-payments', LandSharePaymentController::class);
+    Route::resource( 'land-registrations', LandRegistrationController::class);
 
 
 });

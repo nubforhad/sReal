@@ -1,422 +1,375 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Land Share Sale Details')
-@section('page-title', 'Land Share Sale Details')
+@section('title', 'Land Share Sales')
+@section('page-title', 'Land Share Sales')
 
 @section('content')
 
-<div class="mx-auto max-w-6xl space-y-6">
+<div class="space-y-6">
+
     {{-- Header --}}
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <div class="flex flex-wrap items-center gap-3">
-                <h1 class="text-xl font-bold text-slate-800">
-                    {{ $landShareSale->sale_code }}
-                </h1>
-                @php
-                    $statusClasses = match($landShareSale->status) {
-                        'draft' => 'bg-slate-100 text-slate-700',
-                        'confirmed' => 'bg-blue-100 text-blue-700',
-                        'completed' => 'bg-green-100 text-green-700',
-                        'cancelled' => 'bg-red-100 text-red-700',
-                        default => 'bg-slate-100 text-slate-700',
-                    };
-                @endphp
-                <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold {{ $statusClasses }}">
-                    {{ ucfirst($landShareSale->status) }}
-                </span>
-            </div>
+            <h1 class="text-xl font-bold text-slate-800">
+                Land Share Sales
+            </h1>
+
             <p class="mt-1 text-sm text-slate-500">
-                Land Share Sale Details
+                Manage land share sales and client allocations.
             </p>
         </div>
-        <div class="flex flex-wrap gap-2">
-            <button type="button"
-                    onclick="window.print()"
-                    class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                <i class="bi bi-printer"></i>
-                Print
-            </button>
-            <a href="{{ route('admin.land-share-sales.edit', $landShareSale) }}"
-               class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">
-                <i class="bi bi-pencil"></i>
-                Edit
-            </a>
-            <a href="{{ route('admin.land-share-sales.index') }}"
-               class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                <i class="bi bi-arrow-left"></i>
-                Back
-            </a>
-        </div>
+
+        <a href="{{ route('admin.land-share-sales.create') }}"
+           class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">
+            <i class="bi bi-plus-lg"></i>
+            Add Land Share Sale
+        </a>
     </div>
 
-    {{-- Sale Summary --}}
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div class="erp-card p-5">
-            <p class="text-sm text-slate-500">
-                Land Share
-            </p>
-            <p class="mt-2 text-2xl font-bold text-slate-800">
-                {{ number_format((float) $landShareSale->share_size, 4) }}
-            </p>
-            <p class="text-sm text-slate-500">
-                {{ $landShareSale->share_unit }}
-            </p>
-        </div>
+    {{-- Filters --}}
+    <div class="erp-card p-4">
 
-        <div class="erp-card p-5">
-            <p class="text-sm text-slate-500">
-                Price Per Unit
-            </p>
-            <p class="mt-2 text-2xl font-bold text-slate-800">
-                ৳ {{ number_format((float) $landShareSale->price_per_unit, 2) }}
-            </p>
-            <p class="text-sm text-slate-500">
-                Per {{ $landShareSale->share_unit }}
-            </p>
-        </div>
-        <div class="erp-card border-blue-200 bg-blue-50 p-5">
-            <p class="text-sm text-blue-700">
-                Total Land Share Price
-            </p>
-            <p class="mt-2 text-2xl font-bold text-blue-800">
-                ৳ {{ number_format((float) $landShareSale->land_share_price, 2) }}
-            </p>
-            <p class="text-sm text-blue-600">
-                Payment ledger will be linked later
-            </p>
-        </div>
-    </div>
+        <form method="GET"
+              action="{{ route('admin.land-share-sales.index') }}"
+              class="space-y-4">
 
-    {{-- Business Information --}}
-    <div class="erp-card">
-        <div class="border-b border-slate-200 px-5 py-4">
-            <h2 class="font-semibold text-slate-800">
-                Business Information
-            </h2>
-        </div>
-        <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-3">
-            <div>
-                <p class="text-xs uppercase text-slate-500">  Company </p>
-                <p class="mt-1 font-semibold text-slate-800">
-                    {{ $landShareSale->company?->name ?? 'N/A' }}
-                </p>
-            </div>
-            <div>
-                <p class="text-xs uppercase text-slate-500">  Branch </p>
-                <p class="mt-1 font-semibold text-slate-800">
-                    {{ $landShareSale->branch?->name ?? 'N/A' }}
-                </p>
-            </div>
-            <div>
-                <p class="text-xs uppercase text-slate-500"> Project  </p>
-                <p class="mt-1 font-semibold text-slate-800">
-                    {{ $landShareSale->project?->project_name ?? 'N/A' }}
-                </p>
-            </div>
-        </div>
-    </div>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
 
-    {{-- Client & Land --}}
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {{-- Search --}}
+                <div class="xl:col-span-2">
+                    <label class="mb-1.5 block text-sm font-medium text-slate-700">
+                        Search
+                    </label>
 
-        {{-- Client --}}
-        <div class="erp-card">
+                    <input type="text"
+                           name="search"
+                           value="{{ request('search') }}"
+                           placeholder="Sale code, client, phone, land..."
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                </div>
 
-            <div class="border-b border-slate-200 px-5 py-4">
-
-                <h2 class="font-semibold text-slate-800">
-                    Client Information
-                </h2>
-
-            </div>
-
-            <div class="space-y-4 p-5">
-
+                {{-- Company --}}
                 <div>
-                    <p class="text-xs uppercase text-slate-500">
-                        Client Name
-                    </p>
+                    <label class="mb-1.5 block text-sm font-medium text-slate-700">
+                        Company
+                    </label>
 
-                    <p class="mt-1 font-semibold text-slate-800">
-                        {{ $landShareSale->client?->name ?? 'N/A' }}
-                    </p>
+                    <select name="company_id"
+                            id="company_id"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
+                        <option value="">All Companies</option>
+
+                        @foreach($companies as $company)
+                            <option value="{{ $company->id }}"
+                                {{ request('company_id') == $company->id ? 'selected' : '' }}>
+                                {{ $company->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-
-                    <div>
-                        <p class="text-xs uppercase text-slate-500">
-                            Client ID
-                        </p>
-
-                        <p class="mt-1 text-sm text-slate-700">
-                            {{ $landShareSale->client?->client_code ?? 'N/A' }}
-                        </p>
-                    </div>
-
-                    <div>
-                        <p class="text-xs uppercase text-slate-500">
-                            Phone
-                        </p>
-
-                        <p class="mt-1 text-sm text-slate-700">
-                            {{ $landShareSale->client?->phone ?? 'N/A' }}
-                        </p>
-                    </div>
-
-                </div>
-
+                {{-- Branch --}}
                 <div>
-                    <p class="text-xs uppercase text-slate-500">
-                        NID
-                    </p>
+                    <label class="mb-1.5 block text-sm font-medium text-slate-700">
+                        Branch
+                    </label>
 
-                    <p class="mt-1 text-sm text-slate-700">
-                        {{ $landShareSale->client?->nid ?? 'N/A' }}
-                    </p>
+                    <select name="branch_id"
+                            id="branch_id"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
+
+                        <option value="">All Branches</option>
+
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch->id }}"
+                                    data-company="{{ $branch->company_id }}"
+                                {{ request('branch_id') == $branch->id ? 'selected' : '' }}>
+                                {{ $branch->name }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+
+                {{-- Project --}}
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-slate-700">
+                        Project
+                    </label>
+
+                    <select name="project_id"
+                            id="project_id"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
+
+                        <option value="">All Projects</option>
+
+                        @foreach($projects as $project)
+                            <option value="{{ $project->id }}"
+                                    data-company="{{ $project->company_id }}"
+                                    data-branch="{{ $project->branch_id }}"
+                                {{ request('project_id') == $project->id ? 'selected' : '' }}>
+                                {{ $project->project_name }}
+                            </option>
+                        @endforeach
+
+                    </select>
+                </div>
+
+                {{-- Status --}}
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-slate-700">
+                        Status
+                    </label>
+
+                    <select name="status"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
+
+                        <option value="">All Status</option>
+
+                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>
+                            Draft
+                        </option>
+
+                        <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>
+                            Confirmed
+                        </option>
+
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
+                            Completed
+                        </option>
+
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
+                            Cancelled
+                        </option>
+
+                    </select>
                 </div>
 
             </div>
 
-        </div>
+            <div class="flex flex-wrap gap-2">
 
-        {{-- Land --}}
-        <div class="erp-card">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 rounded-lg bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-900">
+                    <i class="bi bi-search"></i>
+                    Filter
+                </button>
 
-            <div class="border-b border-slate-200 px-5 py-4">
-
-                <h2 class="font-semibold text-slate-800">
-                    Land Information
-                </h2>
-
-            </div>
-
-            <div class="space-y-4 p-5">
-
-                <div>
-                    <p class="text-xs uppercase text-slate-500">
-                        Land Code
-                    </p>
-
-                    <p class="mt-1 font-semibold text-slate-800">
-                        {{ $landShareSale->land?->land_code ?? 'N/A' }}
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-
-                    <div>
-                        <p class="text-xs uppercase text-slate-500">
-                            Land Name
-                        </p>
-
-                        <p class="mt-1 text-sm text-slate-700">
-                            {{ $landShareSale->land?->land_name ?? 'N/A' }}
-                        </p>
-                    </div>
-
-                    <div>
-                        <p class="text-xs uppercase text-slate-500">
-                            Land Unit
-                        </p>
-
-                        <p class="mt-1 text-sm text-slate-700">
-                            {{ $landShareSale->land?->land_unit ?? 'N/A' }}
-                        </p>
-                    </div>
-
-                </div>
-
-                <div>
-                    <p class="text-xs uppercase text-slate-500">
-                        Location
-                    </p>
-
-                    <p class="mt-1 text-sm text-slate-700">
-                        {{ $landShareSale->land?->district ?? 'N/A' }}
-                        @if($landShareSale->land?->upazila)
-                            , {{ $landShareSale->land->upazila }}
-                        @endif
-                        @if($landShareSale->land?->mouza)
-                            , {{ $landShareSale->land->mouza }}
-                        @endif
-                    </p>
-                </div>
+                <a href="{{ route('admin.land-share-sales.index') }}"
+                   class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                    Reset
+                </a>
 
             </div>
 
-        </div>
+        </form>
 
     </div>
 
-    {{-- Sale Details --}}
-    <div class="erp-card">
+    {{-- Table --}}
+    <div class="erp-card overflow-hidden">
 
-        <div class="border-b border-slate-200 px-5 py-4">
+        <div class="border-b border-slate-200 px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-semibold text-slate-800">
+                        Sale Records
+                    </h2>
 
-            <h2 class="font-semibold text-slate-800">
-                Sale Details
-            </h2>
-
-        </div>
-
-        <div class="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 lg:grid-cols-4">
-
-            <div>
-                <p class="text-xs uppercase text-slate-500">
-                    Sale Code
-                </p>
-
-                <p class="mt-1 font-semibold text-slate-800">
-                    {{ $landShareSale->sale_code }}
-                </p>
-            </div>
-
-            <div>
-                <p class="text-xs uppercase text-slate-500">
-                    Sale Date
-                </p>
-
-                <p class="mt-1 text-slate-700">
-                    {{ $landShareSale->sale_date?->format('d M Y') }}
-                </p>
-            </div>
-
-            <div>
-                <p class="text-xs uppercase text-slate-500">
-                    Share Size
-                </p>
-
-                <p class="mt-1 font-semibold text-slate-800">
-                    {{ number_format((float) $landShareSale->share_size, 4) }}
-                    {{ $landShareSale->share_unit }}
-                </p>
-            </div>
-
-            <div>
-                <p class="text-xs uppercase text-slate-500">
-                    Total Price
-                </p>
-
-                <p class="mt-1 font-semibold text-slate-800">
-                    ৳ {{ number_format((float) $landShareSale->land_share_price, 2) }}
-                </p>
-            </div>
-
-        </div>
-
-    </div>
-
-    {{-- Payment Placeholder --}}
-    <div class="erp-card border-dashed">
-
-        <div class="border-b border-slate-200 px-5 py-4">
-
-            <h2 class="font-semibold text-slate-800">
-                Payment Summary
-            </h2>
-
-        </div>
-
-        <div class="p-5">
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-
-                <div class="rounded-lg bg-slate-50 p-4">
-                    <p class="text-xs uppercase text-slate-500">
-                        Total Payable
-                    </p>
-
-                    <p class="mt-1 text-lg font-bold text-slate-800">
-                        ৳ {{ number_format((float) $landShareSale->land_share_price, 2) }}
+                    <p class="text-sm text-slate-500">
+                        {{ $sales->total() }} total records
                     </p>
                 </div>
-
-                <div class="rounded-lg bg-green-50 p-4">
-                    <p class="text-xs uppercase text-green-600">
-                        Paid
-                    </p>
-
-                    <p class="mt-1 text-lg font-bold text-green-700">
-                        ৳ 0.00
-                    </p>
-                </div>
-
-                <div class="rounded-lg bg-red-50 p-4">
-                    <p class="text-xs uppercase text-red-600">
-                        Due
-                    </p>
-
-                    <p class="mt-1 text-lg font-bold text-red-700">
-                        ৳ {{ number_format((float) $landShareSale->land_share_price, 2) }}
-                    </p>
-                </div>
-
             </div>
+        </div>
 
-            <div class="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
-                <i class="bi bi-info-circle mr-1"></i>
+        <div class="table-responsive">
 
-                Land Share Payment module will be connected here.
-                After 100% payment, this sale will become eligible for land registration.
-            </div>
+            <table class="w-full text-left text-sm">
+
+                <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+
+                    <tr>
+                        <th class="px-4 py-3">Sale</th>
+                        <th class="px-4 py-3">Client</th>
+                        <th class="px-4 py-3">Land</th>
+                        <th class="px-4 py-3">Project</th>
+                        <th class="px-4 py-3">Share</th>
+                        <th class="px-4 py-3">Price</th>
+                        <th class="px-4 py-3">Date</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3 text-right">Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    @forelse($sales as $sale)
+
+                        <tr class="hover:bg-slate-50">
+
+                            {{-- Sale --}}
+                            <td class="px-4 py-4">
+                                <div class="font-semibold text-slate-800">
+                                    {{ $sale->sale_code }}
+                                </div>
+
+                                <div class="text-xs text-slate-500">
+                                    {{ $sale->branch?->name }}
+                                </div>
+                            </td>
+
+                            {{-- Client --}}
+                            <td class="px-4 py-4">
+                                <div class="font-medium text-slate-800">
+                                    {{ $sale->client?->name ?? 'N/A' }}
+                                </div>
+
+                                <div class="text-xs text-slate-500">
+                                    {{ $sale->client?->phone }}
+                                </div>
+                            </td>
+
+                            {{-- Land --}}
+                            <td class="px-4 py-4">
+                                <div class="font-medium text-slate-800">
+                                    {{ $sale->land?->land_code }}
+                                </div>
+
+                                <div class="text-xs text-slate-500">
+                                    {{ $sale->land?->land_name }}
+                                </div>
+                            </td>
+
+                            {{-- Project --}}
+                            <td class="px-4 py-4">
+                                {{ $sale->project?->project_name ?? 'N/A' }}
+                            </td>
+
+                            {{-- Share --}}
+                            <td class="px-4 py-4">
+                                <span class="font-semibold text-slate-800">
+                                    {{ number_format((float) $sale->share_size, 4) }}
+                                </span>
+
+                                <span class="text-xs text-slate-500">
+                                    {{ $sale->share_unit }}
+                                </span>
+                            </td>
+
+                            {{-- Price --}}
+                            <td class="px-4 py-4">
+                                <div class="font-semibold text-slate-800">
+                                    ৳ {{ number_format((float) $sale->land_share_price, 2) }}
+                                </div>
+
+                                <div class="text-xs text-slate-500">
+                                    ৳ {{ number_format((float) $sale->price_per_unit, 2) }}
+                                    / {{ $sale->share_unit }}
+                                </div>
+                            </td>
+
+                            {{-- Date --}}
+                            <td class="px-4 py-4 text-slate-600">
+                                {{ $sale->sale_date?->format('d M Y') }}
+                            </td>
+
+                            {{-- Status --}}
+                            <td class="px-4 py-4">
+
+                                @php
+                                    $statusClasses = match($sale->status) {
+                                        'draft' => 'bg-slate-100 text-slate-700',
+                                        'confirmed' => 'bg-blue-100 text-blue-700',
+                                        'completed' => 'bg-green-100 text-green-700',
+                                        'cancelled' => 'bg-red-100 text-red-700',
+                                        default => 'bg-slate-100 text-slate-700',
+                                    };
+                                @endphp
+
+                                <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClasses }}">
+                                    {{ ucfirst($sale->status) }}
+                                </span>
+
+                            </td>
+
+                            {{-- Action --}}
+                            <td class="px-4 py-4">
+
+                                <div class="flex justify-end gap-1">
+
+                                    <a href="{{ route('admin.land-share-sales.show', $sale) }}"
+                                       title="View"
+                                       class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                    <a href="{{ route('admin.land-share-sales.edit', $sale) }}"
+                                       title="Edit"
+                                       class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-blue-200 text-blue-600 hover:bg-blue-50">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <form method="POST"
+                                          action="{{ route('admin.land-share-sales.destroy', $sale) }}"
+                                          class="delete-form">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                title="Delete"
+                                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 text-red-600 hover:bg-red-50">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+                            <td colspan="9" class="px-4 py-12 text-center">
+
+                                <div class="flex flex-col items-center">
+
+                                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+                                        <i class="bi bi-receipt text-2xl text-slate-400"></i>
+                                    </div>
+
+                                    <h3 class="font-semibold text-slate-700">
+                                        No land share sales found
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-slate-500">
+                                        Create your first land share sale.
+                                    </p>
+
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
 
         </div>
 
-    </div>
-
-    {{-- Remarks --}}
-    @if($landShareSale->remarks)
-
-        <div class="erp-card">
-
-            <div class="border-b border-slate-200 px-5 py-4">
-                <h2 class="font-semibold text-slate-800">
-                    Remarks
-                </h2>
+        @if($sales->hasPages())
+            <div class="border-t border-slate-200 px-4 py-4">
+                {{ $sales->links() }}
             </div>
-
-            <div class="p-5 text-sm leading-6 text-slate-700">
-                {{ $landShareSale->remarks }}
-            </div>
-
-        </div>
-
-    @endif
-
-    {{-- System Information --}}
-    <div class="erp-card">
-
-        <div class="border-b border-slate-200 px-5 py-4">
-            <h2 class="font-semibold text-slate-800">
-                System Information
-            </h2>
-        </div>
-
-        <div class="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2">
-
-            <div>
-                <p class="text-xs uppercase text-slate-500">
-                    Created At
-                </p>
-
-                <p class="mt-1 text-sm text-slate-700">
-                    {{ $landShareSale->created_at?->format('d M Y h:i A') }}
-                </p>
-            </div>
-
-            <div>
-                <p class="text-xs uppercase text-slate-500">
-                    Last Updated
-                </p>
-
-                <p class="mt-1 text-sm text-slate-700">
-                    {{ $landShareSale->updated_at?->format('d M Y h:i A') }}
-                </p>
-            </div>
-
-        </div>
+        @endif
 
     </div>
 
@@ -424,40 +377,115 @@
 
 @endsection
 
-@push('styles')
+@push('scripts')
 
-<style>
-@media print {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-    @page {
-        size: A4;
-        margin: 12mm;
+    const company = document.getElementById('company_id');
+    const branch = document.getElementById('branch_id');
+    const project = document.getElementById('project_id');
+
+    const selectedBranch = "{{ request('branch_id') }}";
+    const selectedProject = "{{ request('project_id') }}";
+
+    function filterBranches() {
+
+        const companyId = company.value;
+
+        [...branch.options].forEach(option => {
+
+            if (!option.value) {
+                option.hidden = false;
+                return;
+            }
+
+            const match = !companyId ||
+                option.dataset.company === companyId;
+
+            option.hidden = !match;
+
+        });
+
+        if (
+            branch.value &&
+            companyId &&
+            branch.selectedOptions[0]?.dataset.company !== companyId
+        ) {
+            branch.value = '';
+        }
+
+        filterProjects();
     }
 
-    body {
-        background: #fff !important;
+    function filterProjects() {
+
+        const companyId = company.value;
+        const branchId = branch.value;
+
+        [...project.options].forEach(option => {
+
+            if (!option.value) {
+                option.hidden = false;
+                return;
+            }
+
+            const companyMatch =
+                !companyId ||
+                option.dataset.company === companyId;
+
+            const branchMatch =
+                !branchId ||
+                option.dataset.branch === branchId;
+
+            option.hidden = !(companyMatch && branchMatch);
+
+        });
+
+        if (
+            project.value &&
+            (
+                (companyId && project.selectedOptions[0]?.dataset.company !== companyId) ||
+                (branchId && project.selectedOptions[0]?.dataset.branch !== branchId)
+            )
+        ) {
+            project.value = '';
+        }
     }
 
-    aside,
-    header,
-    nav,
-    button,
-    a,
-    .no-print {
-        display: none !important;
+    company.addEventListener('change', filterBranches);
+    branch.addEventListener('change', filterProjects);
+
+    filterBranches();
+
+    if (selectedBranch) {
+        branch.value = selectedBranch;
+        filterProjects();
     }
 
-    .erp-card {
-        box-shadow: none !important;
-        break-inside: avoid;
+    if (selectedProject) {
+        project.value = selectedProject;
     }
 
-    main {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
+});
+</script>
 
-}
-</style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.delete-form').forEach(form => {
+
+        form.addEventListener('submit', function (e) {
+
+            if (!confirm('Are you sure you want to delete this land share sale?')) {
+                e.preventDefault();
+            }
+
+        });
+
+    });
+
+});
+</script>
 
 @endpush
