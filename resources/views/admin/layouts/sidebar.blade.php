@@ -362,6 +362,43 @@
                      
                 </div>
             </div>
+
+
+            {{-- ===============   Rajuk Approval MANAGEMENT ============== --}}
+            <div x-data="{ open: false }">
+                <button type="button"
+                    @click="open = !open"
+                    class="group flex w-full items-center justify-between
+                           rounded-xl px-3 py-2.5
+                           text-sm font-medium text-slate-600
+                           transition hover:bg-slate-50 hover:text-slate-900"
+                >
+
+                    <span class="flex items-center gap-3">
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center  rounded-lg bg-slate-100 text-slate-500">
+                            <i class="bi bi-map"></i>
+                        </span>
+                        <span>
+                            Rajuk Approval
+                        </span>
+                    </span>
+                    <i class="bi bi-chevron-down text-[10px] text-slate-400
+                               transition-transform"
+                        :class="{ 'rotate-180': open }"
+                    ></i>
+                </button>
+                <div x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
+                    <div x-show="open"  x-cloak class="mt-1 space-y-1 pl-11">
+                        <a href="{{ route('admin.rajuk-approvals.index') }}"  @click="sidebarOpen = false" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition
+                                {{ request()->routeIs('admin.rajuk-approvals.*')
+                                    ? 'bg-blue-50 font-medium text-blue-700'
+                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                            <i class="bi bi-person-vcard"></i>
+                            <span> Rajuk Approval </span>
+                        </a>
+                    </div> 
+                </div>
+            </div>
             {{-- ====  CONSTRUCTION ===== --}}
 
             <div x-data="{ open: false }">
@@ -370,9 +407,7 @@
                         <span class="flex h-8 w-8 shrink-0 items-center justify-center  rounded-lg bg-slate-100 text-slate-500">  
                             <i class="bi bi-cone-striped"></i>
                         </span>
-                        <span>
-                            Construction
-                        </span>
+                        <span> Construction </span>
                     </span>
                     <i class="bi bi-chevron-down text-[10px] text-slate-400
                                transition-transform"

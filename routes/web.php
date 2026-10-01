@@ -11,6 +11,7 @@ use App\Http\Controllers\LandController;
 use App\Http\Controllers\LandShareSaleController;
 use App\Http\Controllers\LandSharePaymentController;
 use App\Http\Controllers\LandRegistrationController;
+use App\Http\Controllers\RajukApprovalController;
 
 
 Route::get('/', function () {
@@ -46,6 +47,12 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::resource( 'land-registrations', LandRegistrationController::class);
     Route::get( 'land-registrations/{landRegistration}/print', [LandRegistrationController::class, 'print'])->name('land-registrations.print');
+
+    Route::resource('rajuk-approvals', RajukApprovalController::class)->names('rajuk-approvals');
+ 
+    Route::get('rajuk-approvals/{rajukApproval}/print', [RajukApprovalController::class, 'print'])->name('rajuk-approvals.print');
+
+    Route::resource('rajuk-approvals', RajukApprovalController::class)->names('rajuk-approvals'); 
 
 
 });
