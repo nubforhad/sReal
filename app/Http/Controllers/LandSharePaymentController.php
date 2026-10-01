@@ -123,17 +123,14 @@ class LandSharePaymentController extends Controller
             'project',
             'land',
             'client',
-        ])
-            ->whereIn('status', [
+        ])->whereIn('status', [
                 'confirmed',
                 'completed',
             ])
             ->latest('id')
             ->get();
 
-        return view(
-            'admin.land-share-payments.create',
-            compact(
+        return view(  'admin.land-share-payments.create', compact(
                 'companies',
                 'branches',
                 'projects',

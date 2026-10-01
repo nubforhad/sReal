@@ -27,54 +27,30 @@ class LandSharePayment extends Model
         'payment_date' => 'date',
         'amount' => 'decimal:2',
     ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | Company
-    |--------------------------------------------------------------------------
-    */
+ 
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Branch
-    |--------------------------------------------------------------------------
-    */
+ 
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Project
-    |--------------------------------------------------------------------------
-    */
+ 
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Land Share Sale
-    |--------------------------------------------------------------------------
-    */
+ 
     public function landShareSale(): BelongsTo
     {
         return $this->belongsTo(LandShareSale::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Client
-    |--------------------------------------------------------------------------
-    */
+ 
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
+ 
 }

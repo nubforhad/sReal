@@ -36,12 +36,16 @@
                 <i class="bi bi-pencil-square"></i>
                 Edit
             </a>
-            <button type="button"
-                    onclick="window.print()"
+            <!-- <button type="button"  onclick="window.print()"
                     class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 <i class="bi bi-printer"></i>
                 Print
-            </button>
+            </button> -->
+            <a href="{{ route('admin.land-registrations.print', $landRegistration) }}" target="_blank"  class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                    <i class="bi bi-printer"></i>
+                    Print
+            </a>
+
             <a href="{{ route('admin.land-registrations.index') }}"
                class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 <i class="bi bi-arrow-left"></i>

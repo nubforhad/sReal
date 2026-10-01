@@ -8,7 +8,6 @@
 
     {{-- Header --}}
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-
         <div>
             <h1 class="text-2xl font-bold text-slate-800">
                 Create Land Registration
@@ -24,7 +23,6 @@
             <i class="bi bi-arrow-left"></i>
             Back
         </a>
-
     </div>
 
     {{-- Errors --}}
@@ -38,146 +36,144 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.land-registrations.store') }}"
-          method="POST"
-          enctype="multipart/form-data"
-          class="space-y-6">
-
+    <form action="{{ route('admin.land-registrations.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
-
-        {{-- Basic Information --}}
+        {{-- =========  BASIC INFORMATION ========= --}}
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
-
             <div class="border-b border-slate-200 px-5 py-4">
                 <h2 class="font-semibold text-slate-800">
                     Basic Information
                 </h2>
             </div>
-
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
-
                 {{-- Company --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Company <span class="text-red-500">*</span>
                     </label>
-
-                    <select name="company_id"
-                            required
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
-
+                    <select name="company_id" id="company_id" required class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Select Company</option>
-
                         @foreach($companies as $company)
                             <option value="{{ $company->id }}"
+                                data-company="{{ $company->id }}"
                                 @selected(old('company_id') == $company->id)>
                                 {{ $company->name }}
                             </option>
                         @endforeach
-
                     </select>
-
                     @error('company_id')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
                 {{-- Branch --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Branch <span class="text-red-500">*</span>
                     </label>
-
-                    <select name="branch_id"
-                            required
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
-
+                    <select name="branch_id"  id="branch_id" required class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Select Branch</option>
-
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}"
-                                @selected(old('branch_id') == $branch->id)>
+                                    data-company="{{ $branch->company_id }}"
+                                    @selected(old('branch_id') == $branch->id)>
                                 {{ $branch->name }}
+
                                 @if($branch->company)
                                     — {{ $branch->company->name }}
                                 @endif
                             </option>
                         @endforeach
-
                     </select>
-
                     @error('branch_id')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
                 {{-- Project --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Project <span class="text-red-500">*</span>
                     </label>
-
-                    <select name="project_id"
-                            required
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
-
+                    <select name="project_id"  id="project_id"  required class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Select Project</option>
-
                         @foreach($projects as $project)
                             <option value="{{ $project->id }}"
-                                @selected(old('project_id') == $project->id)>
+                                    data-company="{{ $project->company_id }}"
+                                    data-branch="{{ $project->branch_id }}"
+                                    @selected(old('project_id') == $project->id)>
                                 {{ $project->project_name }}
                             </option>
                         @endforeach
-
                     </select>
-
                     @error('project_id')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
-                {{-- Sale --}}
+                {{-- ======== LAND SHARE SALE ====== --}}
                 <div class="md:col-span-2 lg:col-span-3">
 
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Land Share Sale <span class="text-red-500">*</span>
                     </label>
-
-                    <select name="land_share_sale_id"
-                            id="land_share_sale_id"
-                            required
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
-
+                    <select name="land_share_sale_id" id="land_share_sale_id" required class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">
                             Select Fully Paid Land Share Sale
                         </option>
-
                         @foreach($sales as $sale)
 
                             @php
-                                $paid = (float) $sale->payments->sum('amount');
                                 $price = (float) $sale->land_share_price;
+                                $paid = (float) $sale->payments->sum('amount');
+
+                                $due = max(0, $price - $paid);
+
+                                $percentage = $price > 0
+                                    ? ($paid / $price) * 100
+                                    : 0;
+
+                                $isFullyPaid = $due <= 0.01;
                             @endphp
 
-                            <option value="{{ $sale->id }}"
-                                @selected(old('land_share_sale_id') == $sale->id)>
+                            {{-- Only fully paid sales --}}
+                            @if($isFullyPaid)
 
-                                Sale #{{ $sale->id }}
-                                —
-                                {{ $sale->client?->name ?? 'N/A' }}
-                                —
-                                ৳{{ number_format($price, 2) }}
-                                — Paid ৳{{ number_format($paid, 2) }}
+                                <option value="{{ $sale->id }}"
+                                        data-company="{{ $sale->company_id }}"
+                                        data-branch="{{ $sale->branch_id }}"
+                                        data-project="{{ $sale->project_id }}"
 
-                            </option>
+                                        data-sale-code="{{ $sale->sale_code ?? 'Sale #'.$sale->id }}"
+
+                                        data-client-id="{{ $sale->client_id }}"
+                                        data-client="{{ $sale->client?->name ?? 'N/A' }}"
+                                        data-phone="{{ $sale->client?->phone ?? '' }}"
+                                        data-email="{{ $sale->client?->email ?? '' }}"
+
+                                        data-price="{{ number_format($price, 2, '.', '') }}"
+                                        data-paid="{{ number_format($paid, 2, '.', '') }}"
+                                        data-due="{{ number_format($due, 2, '.', '') }}"
+                                        data-percentage="{{ number_format($percentage, 2, '.', '') }}"
+
+                                        data-land="{{ $sale->land?->land_name ?? $sale->land?->land_code ?? 'N/A' }}"
+
+                                        @selected(old('land_share_sale_id') == $sale->id)>
+
+                                    {{ $sale->sale_code ?? 'Sale #'.$sale->id }}
+                                    —
+                                    {{ $sale->client?->name ?? 'N/A' }}
+                                    —
+                                    ৳{{ number_format($price, 2) }}
+                                    — Paid ৳{{ number_format($paid, 2) }}
+
+                                </option>
+
+                            @endif
 
                         @endforeach
 
                     </select>
 
                     <p class="mt-1 text-xs text-slate-500">
-                        Only confirmed/completed sales with 100% land share payment are available.
+                        Only fully paid land share sales are available for registration.
                     </p>
 
                     @error('land_share_sale_id')
@@ -186,30 +182,200 @@
 
                 </div>
 
-                {{-- Client --}}
-                <div>
-                    <label class="mb-1.5 block text-sm font-medium text-slate-700">
-                        Client ID <span class="text-red-500">*</span>
-                    </label>
 
-                    <input type="number"
-                           name="client_id"
-                           value="{{ old('client_id') }}"
-                           required
-                           placeholder="Enter client ID"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
+                {{-- =====================================================
+                     CLIENT INFORMATION
+                     No manual client_id input
+                ====================================================== --}}
+                <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id') }}">
+                <div class="md:col-span-2 lg:col-span-3">
 
-                    @error('client_id')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+                    <div id="clientInformation"
+                         class="hidden rounded-xl border border-blue-200 bg-blue-50 p-5">
 
-                    <p class="mt-1 text-xs text-slate-500">
-                        Client must belong to the selected land share sale.
-                    </p>
+                        <div class="mb-4 flex items-center gap-2">
+                            <i class="bi bi-person-check-fill text-blue-600"></i>
+
+                            <h3 class="font-semibold text-slate-800">
+                                Client Information
+                            </h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+
+                            {{-- Client Name --}}
+                            <div class="rounded-lg border border-blue-100 bg-white p-4">
+
+                                <p class="text-xs text-slate-500">
+                                    Client Name
+                                </p>
+
+                                <p id="client_name"
+                                   class="mt-1 font-semibold text-slate-800">
+                                    -
+                                </p>
+
+                            </div>
+
+
+                            {{-- Phone --}}
+                            <div class="rounded-lg border border-blue-100 bg-white p-4">
+
+                                <p class="text-xs text-slate-500">
+                                    Phone
+                                </p>
+
+                                <p id="client_phone"
+                                   class="mt-1 font-semibold text-slate-800">
+                                    -
+                                </p>
+
+                            </div>
+
+
+                            {{-- Email --}}
+                            <div class="rounded-lg border border-blue-100 bg-white p-4">
+
+                                <p class="text-xs text-slate-500">
+                                    Email
+                                </p>
+
+                                <p id="client_email"
+                                   class="mt-1 font-semibold text-slate-800">
+                                    -
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <p class="mt-3 text-xs text-blue-700">
+                            Client information is automatically taken from the selected land share sale.
+                        </p>
+
+                    </div>
+
                 </div>
+
+
+                {{-- =====================================================
+                     SALE PAYMENT INFORMATION
+                ====================================================== --}}
+                <div class="md:col-span-2 lg:col-span-3">
+
+                    <div id="salePaymentInformation"
+                         class="hidden rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+
+                        <div class="mb-4 flex items-center gap-2">
+
+                            <i class="bi bi-cash-stack text-emerald-600"></i>
+
+                            <h3 class="font-semibold text-slate-800">
+                                Sale Payment Information
+                            </h3>
+
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+
+                            {{-- Sale Price --}}
+                            <div class="rounded-lg border border-emerald-100 bg-white p-4">
+
+                                <p class="text-xs text-slate-500">
+                                    Land Share Price
+                                </p>
+
+                                <p id="sale_price"
+                                   class="mt-1 text-lg font-bold text-blue-700">
+                                    ৳ 0.00
+                                </p>
+
+                            </div>
+
+
+                            {{-- Paid --}}
+                            <div class="rounded-lg border border-emerald-100 bg-white p-4">
+
+                                <p class="text-xs text-slate-500">
+                                    Total Paid
+                                </p>
+
+                                <p id="sale_paid"
+                                   class="mt-1 text-lg font-bold text-emerald-700">
+                                    ৳ 0.00
+                                </p>
+
+                            </div>
+
+
+                            {{-- Due --}}
+                            <div class="rounded-lg border border-emerald-100 bg-white p-4">
+
+                                <p class="text-xs text-slate-500">
+                                    Remaining Due
+                                </p>
+
+                                <p id="sale_due"
+                                   class="mt-1 text-lg font-bold text-amber-700">
+                                    ৳ 0.00
+                                </p>
+
+                            </div>
+
+
+                            {{-- Percentage --}}
+                            <div class="rounded-lg border border-emerald-100 bg-white p-4">
+
+                                <p class="text-xs text-slate-500">
+                                    Payment Percentage
+                                </p>
+
+                                <p id="sale_percentage"
+                                   class="mt-1 text-lg font-bold text-emerald-700">
+                                    0%
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- Payment Status --}}
+                        <div class="mt-4 rounded-lg border border-emerald-200 bg-white p-4">
+
+                            <div class="flex items-center justify-between gap-3">
+
+                                <div>
+                                    <p class="text-xs text-slate-500">
+                                        Payment Status
+                                    </p>
+
+                                    <p id="payment_status"
+                                       class="mt-1 font-bold text-emerald-700">
+                                        Fully Paid
+                                    </p>
+                                </div>
+
+                                <span id="payment_status_badge"
+                                      class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Fully Paid
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
 
                 {{-- Status --}}
                 <div>
+
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Status <span class="text-red-500">*</span>
                     </label>
@@ -218,19 +384,23 @@
                             required
                             class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
 
-                        <option value="pending" @selected(old('status', 'pending') === 'pending')>
+                        <option value="pending"
+                            @selected(old('status', 'pending') === 'pending')>
                             Pending
                         </option>
 
-                        <option value="processing" @selected(old('status') === 'processing')>
+                        <option value="processing"
+                            @selected(old('status') === 'processing')>
                             Processing
                         </option>
 
-                        <option value="completed" @selected(old('status') === 'completed')>
+                        <option value="completed"
+                            @selected(old('status') === 'completed')>
                             Completed
                         </option>
 
-                        <option value="cancelled" @selected(old('status') === 'cancelled')>
+                        <option value="cancelled"
+                            @selected(old('status') === 'cancelled')>
                             Cancelled
                         </option>
 
@@ -239,12 +409,16 @@
                     @error('status')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
+
                 </div>
 
             </div>
         </div>
 
-        {{-- Registration Details --}}
+
+        {{-- =========================================================
+             REGISTRATION DETAILS
+        ========================================================== --}}
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
 
             <div class="border-b border-slate-200 px-5 py-4">
@@ -255,6 +429,7 @@
 
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
 
+                {{-- Deed No --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Deed No
@@ -267,6 +442,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Registration Date --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Registration Date
@@ -278,6 +455,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Sub Registry --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Sub Registry Office
@@ -290,6 +469,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- District --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         District
@@ -302,6 +483,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Upazila --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Upazila
@@ -314,6 +497,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Mouza --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Mouza
@@ -326,6 +511,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Khatian --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Khatian No
@@ -338,6 +525,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Dag --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Dag No
@@ -350,6 +539,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- JL --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         JL No
@@ -362,6 +553,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Registered Land Size --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Registered Land Size
@@ -376,6 +569,8 @@
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
                 </div>
 
+
+                {{-- Land Unit --}}
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Land Unit <span class="text-red-500">*</span>
@@ -392,7 +587,10 @@
             </div>
         </div>
 
-        {{-- Costs --}}
+
+        {{-- =========================================================
+             COSTS
+        ========================================================== --}}
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
 
             <div class="border-b border-slate-200 px-5 py-4">
@@ -403,7 +601,9 @@
 
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-3">
 
+                {{-- Registration Cost --}}
                 <div>
+
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Registration Cost
                     </label>
@@ -414,9 +614,13 @@
                            name="registration_cost"
                            value="{{ old('registration_cost', 0) }}"
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
+
                 </div>
 
+
+                {{-- Other Cost --}}
                 <div>
+
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Other Cost
                     </label>
@@ -427,9 +631,13 @@
                            name="other_cost"
                            value="{{ old('other_cost', 0) }}"
                            class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm">
+
                 </div>
 
+
+                {{-- Total --}}
                 <div class="rounded-lg bg-slate-50 p-4">
+
                     <p class="text-sm text-slate-500">
                         Total Cost
                     </p>
@@ -438,12 +646,16 @@
                        class="mt-1 text-xl font-bold text-slate-800">
                         ৳ 0.00
                     </p>
+
                 </div>
 
             </div>
         </div>
 
-        {{-- Documents --}}
+
+        {{-- =========================================================
+             DOCUMENTS
+        ========================================================== --}}
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
 
             <div class="border-b border-slate-200 px-5 py-4">
@@ -454,7 +666,9 @@
 
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-3">
 
+                {{-- Deed Document --}}
                 <div>
+
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Deed Document
                     </label>
@@ -467,9 +681,13 @@
                     <p class="mt-1 text-xs text-slate-500">
                         PDF, JPG, JPEG, PNG — Max 5MB
                     </p>
+
                 </div>
 
+
+                {{-- Registration Document --}}
                 <div>
+
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Registration Document
                     </label>
@@ -482,9 +700,13 @@
                     <p class="mt-1 text-xs text-slate-500">
                         PDF, JPG, JPEG, PNG — Max 5MB
                     </p>
+
                 </div>
 
+
+                {{-- Other Document --}}
                 <div>
+
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Other Document
                     </label>
@@ -497,12 +719,16 @@
                     <p class="mt-1 text-xs text-slate-500">
                         PDF, JPG, JPEG, PNG — Max 5MB
                     </p>
+
                 </div>
 
             </div>
         </div>
 
-        {{-- Remarks --}}
+
+        {{-- =========================================================
+             REMARKS
+        ========================================================== --}}
         <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
 
             <div class="p-5">
@@ -520,7 +746,10 @@
 
         </div>
 
-        {{-- Actions --}}
+
+        {{-- =========================================================
+             ACTIONS
+        ========================================================== --}}
         <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
 
             <a href="{{ route('admin.land-registrations.index') }}"
@@ -529,9 +758,13 @@
             </a>
 
             <button type="submit"
+                    id="submitBtn"
                     class="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">
+
                 <i class="bi bi-check-lg mr-1"></i>
+
                 Save Registration
+
             </button>
 
         </div>
@@ -540,31 +773,405 @@
 
 </div>
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-        const registrationCost = document.querySelector('[name="registration_cost"]');
-        const otherCost = document.querySelector('[name="other_cost"]');
-        const totalPreview = document.getElementById('total_cost_preview');
+    const companySelect = document.getElementById('company_id');
+    const branchSelect = document.getElementById('branch_id');
+    const projectSelect = document.getElementById('project_id');
+    const saleSelect = document.getElementById('land_share_sale_id');
 
-        function updateTotal() {
-            const registration = parseFloat(registrationCost.value) || 0;
-            const other = parseFloat(otherCost.value) || 0;
+    const clientInformation =
+        document.getElementById('clientInformation');
 
-            const total = registration + other;
+    const clientIdInput =
+        document.getElementById('client_id');
 
-            totalPreview.textContent =
-                '৳ ' + total.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
+    const salePaymentInformation =
+        document.getElementById('salePaymentInformation');
+
+    const clientName =
+        document.getElementById('client_name');
+
+    const clientPhone =
+        document.getElementById('client_phone');
+
+    const clientEmail =
+        document.getElementById('client_email');
+
+    const salePrice =
+        document.getElementById('sale_price');
+
+    const salePaid =
+        document.getElementById('sale_paid');
+
+    const saleDue =
+        document.getElementById('sale_due');
+
+    const salePercentage =
+        document.getElementById('sale_percentage');
+
+    const paymentStatus =
+        document.getElementById('payment_status');
+
+    const paymentStatusBadge =
+        document.getElementById('payment_status_badge');
+
+    const registrationCost =
+        document.querySelector('[name="registration_cost"]');
+
+    const otherCost =
+        document.querySelector('[name="other_cost"]');
+
+    const totalPreview =
+        document.getElementById('total_cost_preview');
+
+
+    /* =========================================================
+       FORMAT MONEY
+    ========================================================== */
+
+    function formatMoney(value) {
+
+        return Number(value || 0).toLocaleString('en-BD', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+    }
+
+
+    /* =========================================================
+       COMPANY → BRANCH
+    ========================================================== */
+
+    function filterBranches() {
+
+        const companyId = companySelect.value;
+
+        Array.from(branchSelect.options).forEach(option => {
+
+            if (!option.value) {
+                option.hidden = false;
+                return;
+            }
+
+            const companyMatch =
+                !companyId ||
+                option.dataset.company === companyId;
+
+            option.hidden = !companyMatch;
+
+        });
+
+
+        const selectedOption =
+            branchSelect.options[branchSelect.selectedIndex];
+
+        if (
+            branchSelect.value &&
+            selectedOption &&
+            selectedOption.hidden
+        ) {
+            branchSelect.value = '';
         }
 
-        registrationCost.addEventListener('input', updateTotal);
-        otherCost.addEventListener('input', updateTotal);
+    }
 
-        updateTotal();
+
+    /* =========================================================
+       COMPANY + BRANCH → PROJECT
+    ========================================================== */
+
+    function filterProjects() {
+
+        const companyId = companySelect.value;
+        const branchId = branchSelect.value;
+
+        Array.from(projectSelect.options).forEach(option => {
+
+            if (!option.value) {
+                option.hidden = false;
+                return;
+            }
+
+            const companyMatch =
+                !companyId ||
+                option.dataset.company === companyId;
+
+            const branchMatch =
+                !branchId ||
+                option.dataset.branch === branchId;
+
+            option.hidden =
+                !(companyMatch && branchMatch);
+
+        });
+
+
+        const selectedOption =
+            projectSelect.options[projectSelect.selectedIndex];
+
+        if (
+            projectSelect.value &&
+            selectedOption &&
+            selectedOption.hidden
+        ) {
+            projectSelect.value = '';
+        }
+
+    }
+
+
+    /* =========================================================
+       COMPANY + BRANCH + PROJECT → SALE
+    ========================================================== */
+
+    function filterSales() {
+
+        const companyId = companySelect.value;
+        const branchId = branchSelect.value;
+        const projectId = projectSelect.value;
+
+        Array.from(saleSelect.options).forEach(option => {
+
+            if (!option.value) {
+                option.hidden = false;
+                return;
+            }
+
+            const companyMatch =
+                !companyId ||
+                option.dataset.company === companyId;
+
+            const branchMatch =
+                !branchId ||
+                option.dataset.branch === branchId;
+
+            const projectMatch =
+                !projectId ||
+                option.dataset.project === projectId;
+
+            option.hidden =
+                !(companyMatch &&
+                  branchMatch &&
+                  projectMatch);
+
+        });
+
+
+        const selectedOption =
+            saleSelect.options[saleSelect.selectedIndex];
+
+        if (
+            saleSelect.value &&
+            selectedOption &&
+            selectedOption.hidden
+        ) {
+            saleSelect.value = '';
+        }
+
+        updateSaleInformation();
+
+    }
+
+
+    /* =========================================================
+       SALE INFORMATION
+    ========================================================== */
+
+    function updateSaleInformation() {
+
+        const option =
+            saleSelect.options[saleSelect.selectedIndex];
+
+
+        if (
+            !saleSelect.value ||
+            !option ||
+            option.hidden
+        ) {
+            clientIdInput.value = '';
+            clientInformation.classList.add('hidden');
+            salePaymentInformation.classList.add('hidden');
+            return;
+        }
+        /*  CLIENT  */
+        const clientId = option.dataset.clientId || '';
+
+        clientIdInput.value = clientId;
+        clientName.textContent = option.dataset.client || 'N/A';
+
+        clientPhone.textContent =
+            option.dataset.phone || 'N/A';
+
+        clientEmail.textContent =
+            option.dataset.email || 'N/A';
+
+        clientInformation.classList.remove('hidden');
+
+
+        /* -------------------------
+           PAYMENT
+        ------------------------- */
+
+        const price =
+            parseFloat(option.dataset.price || 0);
+
+        const paid =
+            parseFloat(option.dataset.paid || 0);
+
+        const due =
+            parseFloat(option.dataset.due || 0);
+
+        const percentage =
+            parseFloat(option.dataset.percentage || 0);
+
+
+        salePrice.textContent =
+            '৳ ' + formatMoney(price);
+
+        salePaid.textContent =
+            '৳ ' + formatMoney(paid);
+
+        saleDue.textContent =
+            '৳ ' + formatMoney(due);
+
+        salePercentage.textContent =
+            percentage.toFixed(2) + '%';
+
+
+        /* -------------------------
+           STATUS
+        ------------------------- */
+
+        if (due <= 0.01) {
+
+            paymentStatus.textContent =
+                'Fully Paid';
+
+            paymentStatus.className =
+                'mt-1 font-bold text-emerald-700';
+
+            paymentStatusBadge.className =
+                'inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700';
+
+            paymentStatusBadge.innerHTML =
+                '<i class="bi bi-check-circle-fill"></i> Fully Paid';
+
+        } else {
+
+            paymentStatus.textContent =
+                'Payment Due';
+
+            paymentStatus.className =
+                'mt-1 font-bold text-amber-700';
+
+            paymentStatusBadge.className =
+                'inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700';
+
+            paymentStatusBadge.innerHTML =
+                '<i class="bi bi-exclamation-circle-fill"></i> Payment Due';
+
+        }
+
+
+        salePaymentInformation.classList.remove('hidden');
+
+    }
+
+
+    /* =========================================================
+       TOTAL REGISTRATION COST
+    ========================================================== */
+
+    function updateTotal() {
+
+        const registration =
+            parseFloat(registrationCost.value) || 0;
+
+        const other =
+            parseFloat(otherCost.value) || 0;
+
+        const total =
+            registration + other;
+
+
+        totalPreview.textContent =
+            '৳ ' + formatMoney(total);
+
+    }
+
+
+    /* =========================================================
+       EVENTS
+    ========================================================== */
+
+    companySelect.addEventListener('change', function () {
+
+        branchSelect.value = '';
+        projectSelect.value = '';
+        saleSelect.value = '';
+
+        filterBranches();
+        filterProjects();
+        filterSales();
+
     });
+
+
+    branchSelect.addEventListener('change', function () {
+
+        projectSelect.value = '';
+        saleSelect.value = '';
+
+        filterProjects();
+        filterSales();
+
+    });
+
+
+    projectSelect.addEventListener('change', function () {
+
+        saleSelect.value = '';
+
+        filterSales();
+
+    });
+
+
+    saleSelect.addEventListener(
+        'change',
+        updateSaleInformation
+    );
+
+
+    registrationCost.addEventListener(
+        'input',
+        updateTotal
+    );
+
+
+    otherCost.addEventListener(
+        'input',
+        updateTotal
+    );
+
+
+    /* =========================================================
+       INITIAL LOAD
+    ========================================================== */
+
+    filterBranches();
+    filterProjects();
+    filterSales();
+
+    updateSaleInformation();
+
+    updateTotal();
+
+});
 </script>
 
-@endsection
+@endsection 

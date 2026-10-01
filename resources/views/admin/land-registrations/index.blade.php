@@ -84,19 +84,14 @@
                 <label class="mb-1.5 block text-sm font-medium text-slate-700">
                     Branch
                 </label>
-
-                <select name="branch_id"
-                        class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
-
+                <select name="branch_id" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
                     <option value="">All Branches</option>
-
                     @foreach($branches as $branch)
                         <option value="{{ $branch->id }}"
                             @selected(request('branch_id') == $branch->id)>
                             {{ $branch->name }}
                         </option>
                     @endforeach
-
                 </select>
             </div>
 
@@ -105,19 +100,14 @@
                 <label class="mb-1.5 block text-sm font-medium text-slate-700">
                     Project
                 </label>
-
-                <select name="project_id"
-                        class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
-
+                <select name="project_id" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
                     <option value="">All Projects</option>
-
                     @foreach($projects as $project)
                         <option value="{{ $project->id }}"
                             @selected(request('project_id') == $project->id)>
                             {{ $project->project_name }}
                         </option>
                     @endforeach
-
                 </select>
             </div>
 
@@ -126,9 +116,7 @@
                 <label class="mb-1.5 block text-sm font-medium text-slate-700">
                     Status
                 </label>
-
-                <select name="status"
-                        class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
+                <select name="status" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500">
 
                     <option value="">All Status</option>
 
@@ -287,8 +275,16 @@
                             </td>
 
                             <td class="whitespace-nowrap px-4 py-4 text-right">
-
                                 <div class="flex justify-end gap-1">
+                                    <a href="{{ route('admin.land-registrations.print', $registration) }}"
+                                       title="print"
+                                       class="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-blue-600">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
+
+                                    <a href="{{ route('admin.land-registrations.show', $registration) }}"  title="View" class="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-blue-600">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
 
                                     <a href="{{ route('admin.land-registrations.show', $registration) }}"
                                        title="View"

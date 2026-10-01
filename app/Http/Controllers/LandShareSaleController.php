@@ -34,20 +34,15 @@ class LandShareSaleController extends Controller
                                 ->orWhere('land_name', 'like', '%' . $request->search . '%');
                         });
                 });
-            })
-            ->when($request->company_id, function ($query) use ($request) {
+            })->when($request->company_id, function ($query) use ($request) {
                 $query->where('company_id', $request->company_id);
-            })
-            ->when($request->branch_id, function ($query) use ($request) {
+            })->when($request->branch_id, function ($query) use ($request) {
                 $query->where('branch_id', $request->branch_id);
-            })
-            ->when($request->project_id, function ($query) use ($request) {
+            })->when($request->project_id, function ($query) use ($request) {
                 $query->where('project_id', $request->project_id);
-            })
-            ->when($request->land_id, function ($query) use ($request) {
+            })->when($request->land_id, function ($query) use ($request) {
                 $query->where('land_id', $request->land_id);
-            })
-            ->when($request->status, function ($query) use ($request) {
+            })->when($request->status, function ($query) use ($request) {
                 $query->where('status', $request->status);
             })->latest('id')->paginate(15)->withQueryString();
         $companies = Company::where('status', true)->orderBy('name')->get();
@@ -56,12 +51,10 @@ class LandShareSaleController extends Controller
             'planning',
             'ongoing',
         ])->orderBy('project_name')->get();
-
         $lands = Land::whereIn('status', [
             'available',
             'partially_sold',
         ])->orderBy('land_code')->get();
-
         return view('admin.land-share-sales.index', compact(
             'sales',
             'companies',
@@ -100,32 +93,26 @@ class LandShareSaleController extends Controller
                 'required',
                 'exists:companies,id',
             ],
-
             'branch_id' => [
                 'required',
                 'exists:branches,id',
             ],
-
             'project_id' => [
                 'required',
                 'exists:projects,id',
             ],
-
             'land_id' => [
                 'required',
                 'exists:lands,id',
             ],
-
             'client_id' => [
                 'required',
                 'exists:clients,id',
             ],
-
             'sale_date' => [
                 'required',
                 'date',
             ],
-
             'share_size' => [
                 'required',
                 'numeric',
@@ -398,56 +385,46 @@ class LandShareSaleController extends Controller
                 'required',
                 'exists:companies,id',
             ],
-
             'branch_id' => [
                 'required',
                 'exists:branches,id',
             ],
-
             'project_id' => [
                 'required',
                 'exists:projects,id',
             ],
-
             'land_id' => [
                 'required',
                 'exists:lands,id',
             ],
-
             'client_id' => [
                 'required',
                 'exists:clients,id',
             ],
-
             'sale_date' => [
                 'required',
                 'date',
             ],
-
             'share_size' => [
                 'required',
                 'numeric',
                 'min:0.0001',
             ],
-
             'share_unit' => [
                 'required',
                 'string',
                 'max:30',
             ],
-
             'price_per_unit' => [
                 'required',
                 'numeric',
                 'min:0',
             ],
-
             'land_share_price' => [
                 'required',
                 'numeric',
                 'min:0',
             ],
-
             'status' => [
                 'required',
                 Rule::in([

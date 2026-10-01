@@ -42,6 +42,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('land-share-sales', LandShareSaleController::class);
     Route::resource('land-share-payments', LandSharePaymentController::class);
     Route::resource( 'land-registrations', LandRegistrationController::class);
+    Route::get( 'land-registrations/{landRegistration}/print', [LandRegistrationController::class, 'print'])->name('land-registrations.print');
 
 
 });

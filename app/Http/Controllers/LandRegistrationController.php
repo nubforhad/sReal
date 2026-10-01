@@ -14,6 +14,11 @@ use Illuminate\Validation\Rule;
 
 class LandRegistrationController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | INDEX
+    |--------------------------------------------------------------------------
+    */
     public function index(Request $request)
     {
         $registrations = LandRegistration::with([
@@ -25,35 +30,63 @@ class LandRegistrationController extends Controller
         ])
             ->when($request->search, function ($query) use ($request) {
                 $query->where(function ($q) use ($request) {
+
                     $q->where(
                         'registration_code',
                         'like',
                         '%' . $request->search . '%'
                     )
+
                         ->orWhere(
                             'deed_no',
                             'like',
                             '%' . $request->search . '%'
                         )
+
                         ->orWhereHas('client', function ($clientQuery) use ($request) {
                             $clientQuery
-                                ->where('name', 'like', '%' . $request->search . '%')
-                                ->orWhere('phone', 'like', '%' . $request->search . '%');
+                                ->where(
+                                    'name',
+                                    'like',
+                                    '%' . $request->search . '%'
+                                )
+                                ->orWhere(
+                                    'phone',
+                                    'like',
+                                    '%' . $request->search . '%'
+                                );
                         });
                 });
             })
+
             ->when($request->company_id, function ($query) use ($request) {
-                $query->where('company_id', $request->company_id);
+                $query->where(
+                    'company_id',
+                    $request->company_id
+                );
             })
+
             ->when($request->branch_id, function ($query) use ($request) {
-                $query->where('branch_id', $request->branch_id);
+                $query->where(
+                    'branch_id',
+                    $request->branch_id
+                );
             })
+
             ->when($request->project_id, function ($query) use ($request) {
-                $query->where('project_id', $request->project_id);
+                $query->where(
+                    'project_id',
+                    $request->project_id
+                );
             })
+
             ->when($request->status, function ($query) use ($request) {
-                $query->where('status', $request->status);
+                $query->where(
+                    'status',
+                    $request->status
+                );
             })
+
             ->latest('id')
             ->paginate(15)
             ->withQueryString();
@@ -73,14 +106,23 @@ class LandRegistrationController extends Controller
             ->orderBy('project_name')
             ->get();
 
-        return view('admin.land-registrations.index', compact(
-            'registrations',
-            'companies',
-            'branches',
-            'projects'
-        ));
+        return view(
+            'admin.land-registrations.index',
+            compact(
+                'registrations',
+                'companies',
+                'branches',
+                'projects'
+            )
+        );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
     public function create()
     {
         $companies = Company::where('status', true)
@@ -101,8 +143,13 @@ class LandRegistrationController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Only sales whose land share payment is fully paid
+        | Only fully paid land share sales are eligible
         |--------------------------------------------------------------------------
+        |
+        | confirmed/completed sale
+        | +
+        | 100% land share payment completed
+        |
         */
         $sales = LandShareSale::with([
             'client',
@@ -113,27 +160,33 @@ class LandRegistrationController extends Controller
                 'confirmed',
                 'completed',
             ])
-            ->whereDoesntHave('payments', function ($query) {
-                // No restriction here.
-                // Eligibility is checked below using actual payment total.
-            })
             ->latest('id')
             ->get()
             ->filter(function ($sale) {
-                return $sale->paid_amount >= $sale->land_share_price;
+                return $sale->registration_eligible;
             });
 
-        return view('admin.land-registrations.create', compact(
-            'companies',
-            'branches',
-            'projects',
-            'sales'
-        ));
+        return view(
+            'admin.land-registrations.create',
+            compact(
+                'companies',
+                'branches',
+                'projects',
+                'sales'
+            )
+        );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
     public function store(Request $request)
     {
         $validated = $request->validate([
+
             'company_id' => [
                 'required',
                 'exists:companies,id',
@@ -273,40 +326,60 @@ class LandRegistrationController extends Controller
             ],
         ]);
 
+
         /*
         |--------------------------------------------------------------------------
         | Company → Branch validation
         |--------------------------------------------------------------------------
         */
-        $branchBelongsToCompany = Branch::where('id', $validated['branch_id'])
-            ->where('company_id', $validated['company_id'])
+        $branchBelongsToCompany = Branch::where(
+            'id',
+            $validated['branch_id']
+        )
+            ->where(
+                'company_id',
+                $validated['company_id']
+            )
             ->exists();
 
         if (!$branchBelongsToCompany) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'branch_id' => 'Selected branch does not belong to the selected company.',
+                    'branch_id' =>
+                        'Selected branch does not belong to the selected company.',
                 ]);
         }
+
 
         /*
         |--------------------------------------------------------------------------
         | Company → Branch → Project validation
         |--------------------------------------------------------------------------
         */
-        $project = Project::where('id', $validated['project_id'])
-            ->where('company_id', $validated['company_id'])
-            ->where('branch_id', $validated['branch_id'])
+        $project = Project::where(
+            'id',
+            $validated['project_id']
+        )
+            ->where(
+                'company_id',
+                $validated['company_id']
+            )
+            ->where(
+                'branch_id',
+                $validated['branch_id']
+            )
             ->first();
 
         if (!$project) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'project_id' => 'Selected project does not belong to the selected company and branch.',
+                    'project_id' =>
+                        'Selected project does not belong to the selected company and branch.',
                 ]);
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -316,7 +389,11 @@ class LandRegistrationController extends Controller
         $sale = LandShareSale::with([
             'payments',
             'client',
-        ])->findOrFail($validated['land_share_sale_id']);
+        ])
+            ->findOrFail(
+                $validated['land_share_sale_id']
+            );
+
 
         /*
         |--------------------------------------------------------------------------
@@ -331,56 +408,68 @@ class LandRegistrationController extends Controller
             return back()
                 ->withInput()
                 ->withErrors([
-                    'land_share_sale_id' => 'Selected land share sale does not belong to the selected company, branch and project.',
+                    'land_share_sale_id' =>
+                        'Selected land share sale does not belong to the selected company, branch and project.',
                 ]);
         }
+
 
         /*
         |--------------------------------------------------------------------------
         | Client validation
         |--------------------------------------------------------------------------
         */
-        if ($sale->client_id != $validated['client_id']) {
+        if (
+            $sale->client_id != $validated['client_id']
+        ) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'client_id' => 'Selected client does not belong to the selected land share sale.',
+                    'client_id' =>
+                        'Selected client does not belong to the selected land share sale.',
                 ]);
         }
+
 
         /*
         |--------------------------------------------------------------------------
         | Sale status validation
         |--------------------------------------------------------------------------
         */
-        if (in_array($sale->status, ['cancelled', 'draft'])) {
+        if (
+            in_array(
+                $sale->status,
+                ['cancelled', 'draft']
+            )
+        ) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'land_share_sale_id' => 'Registration cannot be created for this sale.',
+                    'land_share_sale_id' =>
+                        'Registration cannot be created for this sale.',
                 ]);
         }
+
 
         /*
         |--------------------------------------------------------------------------
         | 100% Payment Check
         |--------------------------------------------------------------------------
         */
-        $paidAmount = (float) $sale->payments->sum('amount');
-
-        $landSharePrice = (float) $sale->land_share_price;
-
-        if ($paidAmount < $landSharePrice) {
-            $dueAmount = $landSharePrice - $paidAmount;
+        if (!$sale->registration_eligible) {
 
             return back()
                 ->withInput()
                 ->withErrors([
                     'land_share_sale_id' =>
                         'Land share payment is not fully paid. Remaining due: ৳ '
-                        . number_format($dueAmount, 2),
+                        . number_format(
+                            $sale->due_amount,
+                            2
+                        ),
                 ]);
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -401,16 +490,24 @@ class LandRegistrationController extends Controller
                 ]);
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Total Registration Cost
         |--------------------------------------------------------------------------
         */
-        $registrationCost = (float) ($validated['registration_cost'] ?? 0);
+        $registrationCost = (float) (
+            $validated['registration_cost'] ?? 0
+        );
 
-        $otherCost = (float) ($validated['other_cost'] ?? 0);
+        $otherCost = (float) (
+            $validated['other_cost'] ?? 0
+        );
 
-        $totalCost = $registrationCost + $otherCost;
+        $totalCost =
+            $registrationCost +
+            $otherCost;
+
 
         /*
         |--------------------------------------------------------------------------
@@ -421,65 +518,123 @@ class LandRegistrationController extends Controller
         $registrationDocument = null;
         $otherDocument = null;
 
+
         if ($request->hasFile('deed_document')) {
+
             $deedDocument = $request
                 ->file('deed_document')
-                ->store('land-registrations/deeds', 'public');
+                ->store(
+                    'land-registrations/deeds',
+                    'public'
+                );
         }
+
 
         if ($request->hasFile('registration_document')) {
+
             $registrationDocument = $request
                 ->file('registration_document')
-                ->store('land-registrations/registrations', 'public');
+                ->store(
+                    'land-registrations/registrations',
+                    'public'
+                );
         }
 
+
         if ($request->hasFile('other_document')) {
+
             $otherDocument = $request
                 ->file('other_document')
-                ->store('land-registrations/documents', 'public');
+                ->store(
+                    'land-registrations/documents',
+                    'public'
+                );
         }
+
 
         /*
         |--------------------------------------------------------------------------
-        | Temporary Registration Code
+        | Create Registration
         |--------------------------------------------------------------------------
         */
         $registration = LandRegistration::create([
-            'company_id' => $validated['company_id'],
-            'branch_id' => $validated['branch_id'],
-            'project_id' => $validated['project_id'],
-            'land_share_sale_id' => $sale->id,
-            'client_id' => $validated['client_id'],
 
-            'registration_code' => 'TEMP-' . uniqid(),
+            'company_id' =>
+                $validated['company_id'],
 
-            'deed_no' => $validated['deed_no'] ?? null,
-            'registration_date' => $validated['registration_date'] ?? null,
-            'sub_registry_office' => $validated['sub_registry_office'] ?? null,
+            'branch_id' =>
+                $validated['branch_id'],
 
-            'district' => $validated['district'] ?? null,
-            'upazila' => $validated['upazila'] ?? null,
-            'mouza' => $validated['mouza'] ?? null,
-            'khatian_no' => $validated['khatian_no'] ?? null,
-            'dag_no' => $validated['dag_no'] ?? null,
-            'jl_no' => $validated['jl_no'] ?? null,
+            'project_id' =>
+                $validated['project_id'],
+
+            'land_share_sale_id' =>
+                $sale->id,
+
+            'client_id' =>
+                $validated['client_id'],
+
+            'registration_code' =>
+                'TEMP-' . uniqid(),
+
+            'deed_no' =>
+                $validated['deed_no'] ?? null,
+
+            'registration_date' =>
+                $validated['registration_date'] ?? null,
+
+            'sub_registry_office' =>
+                $validated['sub_registry_office'] ?? null,
+
+            'district' =>
+                $validated['district'] ?? null,
+
+            'upazila' =>
+                $validated['upazila'] ?? null,
+
+            'mouza' =>
+                $validated['mouza'] ?? null,
+
+            'khatian_no' =>
+                $validated['khatian_no'] ?? null,
+
+            'dag_no' =>
+                $validated['dag_no'] ?? null,
+
+            'jl_no' =>
+                $validated['jl_no'] ?? null,
 
             'registered_land_size' =>
                 $validated['registered_land_size'] ?? null,
 
-            'land_unit' => $validated['land_unit'],
+            'land_unit' =>
+                $validated['land_unit'],
 
-            'registration_cost' => $registrationCost,
-            'other_cost' => $otherCost,
-            'total_cost' => $totalCost,
+            'registration_cost' =>
+                $registrationCost,
 
-            'deed_document' => $deedDocument,
-            'registration_document' => $registrationDocument,
-            'other_document' => $otherDocument,
+            'other_cost' =>
+                $otherCost,
 
-            'status' => $validated['status'],
-            'remarks' => $validated['remarks'] ?? null,
+            'total_cost' =>
+                $totalCost,
+
+            'deed_document' =>
+                $deedDocument,
+
+            'registration_document' =>
+                $registrationDocument,
+
+            'other_document' =>
+                $otherDocument,
+
+            'status' =>
+                $validated['status'],
+
+            'remarks' =>
+                $validated['remarks'] ?? null,
         ]);
+
 
         /*
         |--------------------------------------------------------------------------
@@ -487,21 +642,40 @@ class LandRegistrationController extends Controller
         |--------------------------------------------------------------------------
         */
         $registration->update([
+
             'registration_code' =>
-                'REG-' . now()->format('Y') . '-' .
-                str_pad($registration->id, 6, '0', STR_PAD_LEFT),
+                'REG-' .
+                now()->format('Y') .
+                '-' .
+                str_pad(
+                    $registration->id,
+                    6,
+                    '0',
+                    STR_PAD_LEFT
+                ),
         ]);
 
+
         return redirect()
-            ->route('admin.land-registrations.show', $registration)
+            ->route(
+                'admin.land-registrations.show',
+                $registration
+            )
             ->with(
                 'success',
                 'Land registration created successfully.'
             );
     }
 
-    public function show(LandRegistration $landRegistration)
-    {
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW
+    |--------------------------------------------------------------------------
+    */
+    public function show(
+        LandRegistration $landRegistration
+    ) {
         $landRegistration->load([
             'company',
             'branch',
@@ -517,8 +691,15 @@ class LandRegistrationController extends Controller
         );
     }
 
-    public function edit(LandRegistration $landRegistration)
-    {
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT
+    |--------------------------------------------------------------------------
+    */
+    public function edit(
+        LandRegistration $landRegistration
+    ) {
         $companies = Company::where('status', true)
             ->orderBy('name')
             ->get();
@@ -535,6 +716,12 @@ class LandRegistrationController extends Controller
             ->orderBy('project_name')
             ->get();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Current sale + other fully paid sales
+        |--------------------------------------------------------------------------
+        */
         $sales = LandShareSale::with([
             'client',
             'land',
@@ -547,24 +734,38 @@ class LandRegistrationController extends Controller
             ->latest('id')
             ->get()
             ->filter(function ($sale) use ($landRegistration) {
-                return $sale->id == $landRegistration->land_share_sale_id
-                    || $sale->paid_amount >= $sale->land_share_price;
+
+                return $sale->id ==
+                    $landRegistration->land_share_sale_id
+
+                    || $sale->registration_eligible;
             });
 
-        return view('admin.land-registrations.edit', compact(
-            'landRegistration',
-            'companies',
-            'branches',
-            'projects',
-            'sales'
-        ));
+
+        return view(
+            'admin.land-registrations.edit',
+            compact(
+                'landRegistration',
+                'companies',
+                'branches',
+                'projects',
+                'sales'
+            )
+        );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
     public function update(
         Request $request,
         LandRegistration $landRegistration
     ) {
         $validated = $request->validate([
+
             'company_id' => [
                 'required',
                 'exists:companies,id',
@@ -704,16 +905,24 @@ class LandRegistrationController extends Controller
             ],
         ]);
 
+
         /*
         |--------------------------------------------------------------------------
         | Company → Branch
         |--------------------------------------------------------------------------
         */
-        $branchBelongsToCompany = Branch::where('id', $validated['branch_id'])
-            ->where('company_id', $validated['company_id'])
+        $branchBelongsToCompany = Branch::where(
+            'id',
+            $validated['branch_id']
+        )
+            ->where(
+                'company_id',
+                $validated['company_id']
+            )
             ->exists();
 
         if (!$branchBelongsToCompany) {
+
             return back()
                 ->withInput()
                 ->withErrors([
@@ -722,17 +931,28 @@ class LandRegistrationController extends Controller
                 ]);
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Company → Branch → Project
         |--------------------------------------------------------------------------
         */
-        $projectExists = Project::where('id', $validated['project_id'])
-            ->where('company_id', $validated['company_id'])
-            ->where('branch_id', $validated['branch_id'])
+        $projectExists = Project::where(
+            'id',
+            $validated['project_id']
+        )
+            ->where(
+                'company_id',
+                $validated['company_id']
+            )
+            ->where(
+                'branch_id',
+                $validated['branch_id']
+            )
             ->exists();
 
         if (!$projectExists) {
+
             return back()
                 ->withInput()
                 ->withErrors([
@@ -741,19 +961,32 @@ class LandRegistrationController extends Controller
                 ]);
         }
 
+
         /*
         |--------------------------------------------------------------------------
-        | Sale
+        | Load Sale
         |--------------------------------------------------------------------------
         */
-        $sale = LandShareSale::with('payments')
-            ->findOrFail($validated['land_share_sale_id']);
+        $sale = LandShareSale::with([
+            'payments',
+            'client',
+        ])
+            ->findOrFail(
+                $validated['land_share_sale_id']
+            );
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sale → Company / Branch / Project
+        |--------------------------------------------------------------------------
+        */
         if (
             $sale->company_id != $validated['company_id'] ||
             $sale->branch_id != $validated['branch_id'] ||
             $sale->project_id != $validated['project_id']
         ) {
+
             return back()
                 ->withInput()
                 ->withErrors([
@@ -762,12 +995,16 @@ class LandRegistrationController extends Controller
                 ]);
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Client
         |--------------------------------------------------------------------------
         */
-        if ($sale->client_id != $validated['client_id']) {
+        if (
+            $sale->client_id != $validated['client_id']
+        ) {
+
             return back()
                 ->withInput()
                 ->withErrors([
@@ -776,99 +1013,154 @@ class LandRegistrationController extends Controller
                 ]);
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | 100% Payment Check
         |--------------------------------------------------------------------------
         */
-        $paidAmount = (float) $sale->payments->sum('amount');
-
-        $landSharePrice = (float) $sale->land_share_price;
-
-        if ($paidAmount < $landSharePrice) {
-            $dueAmount = $landSharePrice - $paidAmount;
+        if (!$sale->registration_eligible) {
 
             return back()
                 ->withInput()
                 ->withErrors([
                     'land_share_sale_id' =>
                         'Land share payment is not fully paid. Remaining due: ৳ '
-                        . number_format($dueAmount, 2),
+                        . number_format(
+                            $sale->due_amount,
+                            2
+                        ),
                 ]);
         }
+
 
         /*
         |--------------------------------------------------------------------------
         | Total Cost
         |--------------------------------------------------------------------------
         */
-        $registrationCost = (float) ($validated['registration_cost'] ?? 0);
+        $registrationCost = (float) (
+            $validated['registration_cost'] ?? 0
+        );
 
-        $otherCost = (float) ($validated['other_cost'] ?? 0);
+        $otherCost = (float) (
+            $validated['other_cost'] ?? 0
+        );
 
-        $totalCost = $registrationCost + $otherCost;
+        $totalCost =
+            $registrationCost +
+            $otherCost;
+
 
         /*
         |--------------------------------------------------------------------------
-        | Existing Files
+        | Update Data
         |--------------------------------------------------------------------------
         */
         $data = [
-            'company_id' => $validated['company_id'],
-            'branch_id' => $validated['branch_id'],
-            'project_id' => $validated['project_id'],
-            'land_share_sale_id' => $sale->id,
-            'client_id' => $validated['client_id'],
 
-            'deed_no' => $validated['deed_no'] ?? null,
+            'company_id' =>
+                $validated['company_id'],
+
+            'branch_id' =>
+                $validated['branch_id'],
+
+            'project_id' =>
+                $validated['project_id'],
+
+            'land_share_sale_id' =>
+                $sale->id,
+
+            'client_id' =>
+                $validated['client_id'],
+
+            'deed_no' =>
+                $validated['deed_no'] ?? null,
+
             'registration_date' =>
                 $validated['registration_date'] ?? null,
 
             'sub_registry_office' =>
                 $validated['sub_registry_office'] ?? null,
 
-            'district' => $validated['district'] ?? null,
-            'upazila' => $validated['upazila'] ?? null,
-            'mouza' => $validated['mouza'] ?? null,
-            'khatian_no' => $validated['khatian_no'] ?? null,
-            'dag_no' => $validated['dag_no'] ?? null,
-            'jl_no' => $validated['jl_no'] ?? null,
+            'district' =>
+                $validated['district'] ?? null,
+
+            'upazila' =>
+                $validated['upazila'] ?? null,
+
+            'mouza' =>
+                $validated['mouza'] ?? null,
+
+            'khatian_no' =>
+                $validated['khatian_no'] ?? null,
+
+            'dag_no' =>
+                $validated['dag_no'] ?? null,
+
+            'jl_no' =>
+                $validated['jl_no'] ?? null,
 
             'registered_land_size' =>
                 $validated['registered_land_size'] ?? null,
 
-            'land_unit' => $validated['land_unit'],
+            'land_unit' =>
+                $validated['land_unit'],
 
-            'registration_cost' => $registrationCost,
-            'other_cost' => $otherCost,
-            'total_cost' => $totalCost,
+            'registration_cost' =>
+                $registrationCost,
 
-            'status' => $validated['status'],
-            'remarks' => $validated['remarks'] ?? null,
+            'other_cost' =>
+                $otherCost,
+
+            'total_cost' =>
+                $totalCost,
+
+            'status' =>
+                $validated['status'],
+
+            'remarks' =>
+                $validated['remarks'] ?? null,
         ];
+
 
         /*
         |--------------------------------------------------------------------------
-        | Replace Documents
+        | Replace Deed Document
         |--------------------------------------------------------------------------
         */
         if ($request->hasFile('deed_document')) {
 
             if ($landRegistration->deed_document) {
+
                 Storage::disk('public')
-                    ->delete($landRegistration->deed_document);
+                    ->delete(
+                        $landRegistration->deed_document
+                    );
             }
 
             $data['deed_document'] = $request
                 ->file('deed_document')
-                ->store('land-registrations/deeds', 'public');
+                ->store(
+                    'land-registrations/deeds',
+                    'public'
+                );
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Replace Registration Document
+        |--------------------------------------------------------------------------
+        */
         if ($request->hasFile('registration_document')) {
 
             if ($landRegistration->registration_document) {
+
                 Storage::disk('public')
-                    ->delete($landRegistration->registration_document);
+                    ->delete(
+                        $landRegistration->registration_document
+                    );
             }
 
             $data['registration_document'] = $request
@@ -879,11 +1171,20 @@ class LandRegistrationController extends Controller
                 );
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Replace Other Document
+        |--------------------------------------------------------------------------
+        */
         if ($request->hasFile('other_document')) {
 
             if ($landRegistration->other_document) {
+
                 Storage::disk('public')
-                    ->delete($landRegistration->other_document);
+                    ->delete(
+                        $landRegistration->other_document
+                    );
             }
 
             $data['other_document'] = $request
@@ -894,7 +1195,14 @@ class LandRegistrationController extends Controller
                 );
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Registration
+        |--------------------------------------------------------------------------
+        */
         $landRegistration->update($data);
+
 
         return redirect()
             ->route(
@@ -907,35 +1215,53 @@ class LandRegistrationController extends Controller
             );
     }
 
-    public function destroy(LandRegistration $landRegistration)
-    {
-        /*
-        |--------------------------------------------------------------------------
-        | Delete Documents
-        |--------------------------------------------------------------------------
-        */
-        if ($landRegistration->deed_document) {
-            Storage::disk('public')
-                ->delete($landRegistration->deed_document);
-        }
 
+    /*
+    |--------------------------------------------------------------------------
+    | DESTROY
+    |--------------------------------------------------------------------------
+    */
+    public function destroy( LandRegistration $landRegistration) {
+        if ($landRegistration->deed_document) {
+
+            Storage::disk('public')
+                ->delete(
+                    $landRegistration->deed_document
+                );
+        }
         if ($landRegistration->registration_document) {
             Storage::disk('public')
-                ->delete($landRegistration->registration_document);
+                ->delete(
+                    $landRegistration->registration_document
+                );
         }
-
         if ($landRegistration->other_document) {
             Storage::disk('public')
-                ->delete($landRegistration->other_document);
+                ->delete(
+                    $landRegistration->other_document
+                );
         }
-
         $landRegistration->delete();
-
-        return redirect()
-            ->route('admin.land-registrations.index')
-            ->with(
-                'success',
-                'Land registration deleted successfully.'
-            );
+        return redirect()->route( 'admin.land-registrations.index')->with( 'success', 'Land registration deleted successfully.' );
     }
+
+    public function print(LandRegistration $landRegistration)
+    {
+        $landRegistration->load([
+            'company',
+            'branch',
+            'project',
+            'landShareSale.land',
+            'landShareSale.payments',
+            'client',
+        ]);
+
+        return view(
+            'admin.land-registrations.print',
+            compact('landRegistration')
+        );
+    }
+
+
+    
 }
