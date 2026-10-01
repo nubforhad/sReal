@@ -421,9 +421,9 @@
             </div>
 
             <div class="field">
-                <div class="label">Email</div>
+                <div class="label"> Address </div>
                 <div class="value">
-                    {{ $landRegistration->client?->email ?? 'N/A' }}
+                    {{ $landRegistration->client?->address ?? 'N/A' }}
                 </div>
             </div>
 

@@ -285,13 +285,7 @@
                                     <a href="{{ route('admin.land-registrations.show', $registration) }}"  title="View" class="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-blue-600">
                                         <i class="bi bi-eye"></i>
                                     </a>
-
-                                    <a href="{{ route('admin.land-registrations.show', $registration) }}"
-                                       title="View"
-                                       class="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-blue-600">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-
+                                    
                                     <a href="{{ route('admin.land-registrations.edit', $registration) }}"
                                        title="Edit"
                                        class="rounded-lg p-2 text-slate-600 hover:bg-blue-50 hover:text-blue-600">

@@ -40,7 +40,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('lands', LandController::class);
     Route::resource('land-share-sales', LandShareSaleController::class);
+    
     Route::resource('land-share-payments', LandSharePaymentController::class);
+    Route::get('land-share-payments/{landSharePayment}/print', [LandSharePaymentController::class, 'print'])->name('land-share-payments.print');
+
     Route::resource( 'land-registrations', LandRegistrationController::class);
     Route::get( 'land-registrations/{landRegistration}/print', [LandRegistrationController::class, 'print'])->name('land-registrations.print');
 

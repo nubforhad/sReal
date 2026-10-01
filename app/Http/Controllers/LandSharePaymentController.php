@@ -580,4 +580,98 @@ class LandSharePaymentController extends Controller
                 'Land share payment deleted successfully.'
             );
     }
+
+    public function print(LandSharePayment $landSharePayment)
+{
+    $landSharePayment->load([
+        'company',
+        'branch',
+        'project',
+        'landShareSale.land',
+        'client',
+    ]);
+
+    $methodLabels = [
+        'cash'           => 'Cash',
+        'bank'           => 'Bank',
+        'cheque'         => 'Cheque',
+        'mobile_banking' => 'Mobile Banking',
+        'online'         => 'Online',
+        'other'          => 'Other',
+    ];
+
+    $amountInWords = $this->amountInWords((float) $landSharePayment->amount);
+
+    return view('admin.land-share-payments.print', [
+        'payment'       => $landSharePayment,
+        'methodLabel'   => $methodLabels[$landSharePayment->payment_method]
+                            ?? ucfirst($landSharePayment->payment_method),
+        'amountInWords' => $amountInWords,
+    ]);
+}
+
+private function amountInWords(float $amount): string
+{
+    $taka  = (int) floor($amount);
+    $paisa = (int) round(($amount - $taka) * 100);
+
+    $words = $this->numberToWords($taka) . ' Taka';
+
+    if ($paisa > 0) {
+        $words .= ' and ' . $this->numberToWords($paisa) . ' Paisa';
+    }
+
+    return $words . ' Only';
+}
+
+private function numberToWords(int $number): string
+{
+    if ($number === 0) {
+        return 'Zero';
+    }
+
+    $ones = [
+        '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',
+        'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
+        'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen',
+    ];
+
+    $tens = [
+        '', '', 'Twenty', 'Thirty', 'Forty', 'Fifty',
+        'Sixty', 'Seventy', 'Eighty', 'Ninety',
+    ];
+
+    $below100 = function (int $n) use ($ones, $tens) {
+        if ($n < 20) {
+            return $ones[$n];
+        }
+        return trim($tens[intdiv($n, 10)] . ' ' . $ones[$n % 10]);
+    };
+
+    $parts = [];
+
+    // Bangladeshi system: Crore, Lakh, Thousand, Hundred
+    $units = [
+        10000000 => 'Crore',
+        100000   => 'Lakh',
+        1000     => 'Thousand',
+        100      => 'Hundred',
+    ];
+
+    foreach ($units as $value => $label) {
+        if ($number >= $value) {
+            $count  = intdiv($number, $value);
+            $number = $number % $value;
+            $parts[] = $this->numberToWords($count) . ' ' . $label;
+        }
+    }
+
+    if ($number > 0) {
+        $parts[] = $below100($number);
+    }
+
+    return trim(implode(' ', $parts));
+}
+
+
 }

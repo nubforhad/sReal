@@ -268,6 +268,12 @@
                             <td class="px-4 py-3">
                                 <div class="flex justify-end gap-1">
 
+                                    <a href="{{ route('admin.land-share-payments.print', $payment) }}"
+                                       title="print"
+                                       class="rounded-lg p-2 text-blue-600 hover:bg-blue-50">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
+
                                     <a href="{{ route('admin.land-share-payments.show', $payment) }}"
                                        title="View"
                                        class="rounded-lg p-2 text-blue-600 hover:bg-blue-50">
