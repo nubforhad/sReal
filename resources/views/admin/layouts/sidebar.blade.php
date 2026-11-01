@@ -1,16 +1,7 @@
 
-<aside
-    class="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col
-           border-r border-slate-200 bg-white
-           shadow-[4px_0_24px_rgba(15,23,42,0.06)]
-           transform transition-transform duration-300 ease-in-out
-           -translate-x-full lg:translate-x-0"
-    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
->
-
+<aside class="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-slate-200 bg-white shadow-[4px_0_24px_rgba(15,23,42,0.06)] transform transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
 
     {{-- ===========  SIDEBAR HEADER ======== --}}
-
     <div class="flex h-16 shrink-0 items-center  border-b border-slate-200 bg-white px-4">
         <a href="{{ route('dashboard') }}" @click="sidebarOpen = false" class="flex min-w-0 items-center gap-3">
             {{-- Logo --}}
@@ -19,7 +10,6 @@
             </div>
             {{-- Logo Text --}}
             <div class="min-w-0">
-
                 <h1 class="truncate text-sm font-bold tracking-tight text-slate-800">
                     Real Estate ERP
                 </h1>
@@ -29,60 +19,25 @@
             </div>
         </a>
         {{-- Mobile Close Button --}}
-        <button
-            type="button"
-            @click="sidebarOpen = false"
-            class="ml-auto flex h-9 w-9 shrink-0 items-center justify-center
-                   rounded-lg text-slate-500
-                   transition duration-200
-                   hover:bg-red-50 hover:text-red-600
-                   lg:hidden"
-            aria-label="Close sidebar"
-        >
+        <button type="button" @click="sidebarOpen = false"
+            class="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-500 transition duration-200  hover:bg-red-50 hover:text-red-600 lg:hidden" aria-label="Close sidebar">
             <i class="bi bi-x-lg text-lg"></i>
         </button>
-
     </div>
 
-
-
-    {{-- =========================================
-         SIDEBAR MENU SCROLL AREA
-    ========================================= --}}
-
-    <div
-        class="sidebar-scroll min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-4"
-    >
-
+    {{-- =======   SIDEBAR MENU SCROLL AREA ======== --}}
+    <div class="sidebar-scroll min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-4">
         {{-- Main Menu Label --}}
         <div class="mb-2 px-3">
-
-            <p
-                class="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400"
-            >
+            <p class="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-400">
                 Main Menu
             </p>
-
         </div>
-
-
         <nav class="space-y-1">
-
-
-            {{-- =====================================
-                 DASHBOARD
-            ====================================== --}}
-
-            <a
-                href="{{ route('dashboard') }}"
-                @click="sidebarOpen = false"
-                class="group flex items-center gap-3 rounded-xl px-3 py-2.5
-                       text-sm font-medium transition-all duration-200
-                       {{ request()->routeIs('dashboard')
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}"
-            >
-
+            {{-- =========== DASHBOARD ========= --}}
+            <a href="{{ route('dashboard') }}" @click="sidebarOpen = false"
+                class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200
+                       {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                 <span
                     class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
                     {{ request()->routeIs('dashboard')
@@ -91,66 +46,32 @@
                 >
                     <i class="bi bi-grid-1x2-fill"></i>
                 </span>
-
                 <span>
                     Dashboard
                 </span>
-
             </a>
-
-
-
             {{-- ==========  COMPANY MANAGEMENT ===== --}}
+            <div x-data="{  open: {{ request()->routeIs('admin.companies.*', 'admin.branches.*', 'admin.projects.*') ? 'true' : 'false' }}}">
 
-            <div
-                x-data="{
-                    open: {{ request()->routeIs('admin.companies.*', 'admin.branches.*', 'admin.projects.*') ? 'true' : 'false' }}
-                }"
-            >
-
-                <button
-                    type="button"
+                <button  type="button"
                     @click="open = !open"
-                    class="group flex w-full items-center justify-between
-                           rounded-xl px-3 py-2.5
-                           text-sm font-medium text-slate-600
-                           transition hover:bg-slate-50 hover:text-slate-900"
-                >
-
+                    class="group flex w-full items-center justify-between  rounded-xl px-3 py-2.5  text-sm font-medium text-slate-600  transition hover:bg-slate-50 hover:text-slate-900">
                     <span class="flex min-w-0 items-center gap-3">
-
-                        <span
-                            class="flex h-8 w-8 shrink-0 items-center justify-center
-                                   rounded-lg bg-slate-100 text-slate-500
-                                   transition group-hover:bg-white"
-                        >
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center  rounded-lg bg-slate-100 text-slate-500 transition group-hover:bg-white">
                             <i class="bi bi-buildings"></i>
                         </span>
-
                         <span class="truncate">
                             Company Management
                         </span>
-
                     </span>
-
-
-                    <i
-                        class="bi bi-chevron-down ml-2 shrink-0 text-[10px]
+                    <i class="bi bi-chevron-down ml-2 shrink-0 text-[10px]
                                text-slate-400 transition-transform duration-200"
                         :class="{ 'rotate-180': open }"
                     ></i>
-
                 </button>
+                <div x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
 
-
-                <div
-                    x-show="open"
-                    x-cloak
-                    class="mt-1 space-y-1 pl-11"
-                >
-
-                    <a
-                        href="{{ route('admin.companies.index') }}"
+                    <a  href="{{ route('admin.companies.index') }}"
                         @click="sidebarOpen = false"
                         class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm
                             transition
@@ -162,9 +83,7 @@
                         <span>Companies</span>
                     </a>
 
-
-                    <a
-                        href="{{ route('admin.branches.index') }}"
+                    <a href="{{ route('admin.branches.index') }}"
                         @click="sidebarOpen = false"
                         class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm
                             transition

@@ -29,7 +29,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('users', UserController::class);
@@ -51,16 +50,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('rajuk-approvals', RajukApprovalController::class)->names('rajuk-approvals');
  
     Route::get('rajuk-approvals/{rajukApproval}/print', [RajukApprovalController::class, 'print'])->name('rajuk-approvals.print');
-
-    Route::resource('rajuk-approvals', RajukApprovalController::class)->names('rajuk-approvals'); 
-
-
 });
-
-
-
-
-
 
 
 require __DIR__.'/auth.php';

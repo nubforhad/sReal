@@ -18,8 +18,7 @@
         </div>
 
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('admin.rajuk-approvals.index') }}"
-               class="inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            <a href="{{ route('admin.rajuk-approvals.index') }}"  class="inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
                 <i class="bi bi-arrow-left mr-2"></i>
                 Back
             </a>
@@ -29,14 +28,9 @@
                 <i class="bi bi-pencil-square mr-2"></i>
                 Edit
             </a>
- 
-            <a href="{{ route('admin.rajuk-approvals.print', $rajukApproval) }}"
-            target="_blank"
-            class="inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900">
-                <i class="bi bi-printer mr-2"></i>
-                Print
+            <a href="{{ route('admin.rajuk-approvals.print', $rajukApproval) }}" target="_blank" class="inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900">
+                <i class="bi bi-printer mr-2"></i> Print
             </a> 
-
         </div>
     </div>
 
