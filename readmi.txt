@@ -1,0 +1,174 @@
+বর্তমান workflow হবে:
+1. ✅ Client Management
+2. ✅ Project Management
+3. ✅ Land Share Sale
+4. ✅ Land Share Payment
+5. ✅ Land Registration
+6. 🔜 RAJUK Plan / Approval Management
+7. Building / Construction Management
+8. Construction Cost / BOQ
+9. Service Charge — 10%
+10. Monthly Installment / Building Payment
+11. Payment Point System
+12. 80% Payment → Flat Choice
+13. Flat Allocation
+14. Agreement Management
+15. Handover Management
+16. Finance / Accounting
+17. Reports
+18. Documents / Print / PDF
+
+=======================================================
+Real Estate ERP Modules
+1. Dashboard
+   - Total Projects
+   - Total Properties/Units
+   - Sold Units
+   - Available Units
+   - Booked Units
+   - Total Sales
+   - Total Collection
+   - Due Amount
+   - Expenses
+   - Profit/Loss
+2. Company & Branch
+   - Company
+   - Branch
+   - Branch-wise data
+   - User/Manager access
+3. Project Management
+   - Project
+   - Project location
+   - Project type
+   - Project status
+   - Project start/end date
+   - Total land
+   - Developer information
+4. Property / Unit Management
+   - Apartment/Flat
+   - Shop
+   - Office
+   - Plot
+   - Parking
+   - Unit number
+   - Floor
+   - Size
+   - Facing
+   - Price
+   - Status: Available / Booked / Sold
+5. Customer / Buyer Management
+   - Customer profile
+   - NID
+   - Address
+   - Contact
+   - Nominee
+   - Documents
+6. Booking Management
+   - Unit booking
+   - Booking date
+   - Booking money
+   - Discount
+   - Booking status
+   - Customer assignment
+7. Sales Management
+   - Sale agreement
+   - Sale price
+   - Discount
+   - Down payment
+   - Installment plan
+   - Due amount
+   - Salesperson/agent
+8. Installment / Payment
+   - Installment schedule
+   - Payment collection
+   - Receipt
+   - Due tracking
+   - Overdue
+   - Payment history
+9. CRM / Lead Management
+   - Leads
+   - Source
+   - Follow-up
+   - Site visit
+   - Interested project
+   - Interested unit
+   - Lead → Customer → Booking
+10. Agent / Sales Team
+    - Sales agents
+    - Commission
+    - Target
+    - Sales performance
+    - Commission payment
+11. Expense Management
+    - Project expense
+    - Office expense
+    - Construction expense
+    - Marketing expense
+    - Salary
+    - Other expenses
+12. Finance / Accounting
+    - Income
+    - Expense
+    - Customer payment
+    - Supplier payment
+    - Account/Bank/Cash
+    - Ledger
+    - Profit & Loss
+    - Project-wise financial report
+13. Land Management
+    - Land owner
+    - Land purchase
+    - Land size
+    - Mouza
+    - Khatian
+    - Dag
+    - Deed
+    - Land cost
+    - Development cost
+14. Construction Management
+    - Construction phases
+    - Work progress
+    - Contractor
+    - Materials
+    - Labour
+    - Project budget
+    - Actual cost
+15. Document Management
+    - NID
+    - Agreement
+    - Booking form
+    - Sale deed
+    - Payment receipt
+    - Customer documents
+    - Project documents
+16. HR & Payroll
+    - Employee
+    - Attendance
+    - Leave
+    - Salary
+    - Department
+    - Designation
+17. Reports
+    - Project report
+    - Available unit report
+    - Sales report
+    - Booking report
+    - Collection report
+    - Due report
+    - Customer report
+    - Agent commission report
+    - Expense report
+    - Profit/Loss report
+18. Role & Permission
+    - Super Admin
+    - Company Admin
+    - Branch Manager
+    - Sales Manager
+    - Sales Executive
+    - Accountant
+    - HR
+    - Viewer
+
+====================================================================
+
+

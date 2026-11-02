@@ -13,6 +13,8 @@ use App\Http\Controllers\LandSharePaymentController;
 use App\Http\Controllers\LandRegistrationController;
 use App\Http\Controllers\RajukApprovalController;
 
+use App\Http\Controllers\BuildingController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -50,6 +52,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('rajuk-approvals', RajukApprovalController::class)->names('rajuk-approvals');
  
     Route::get('rajuk-approvals/{rajukApproval}/print', [RajukApprovalController::class, 'print'])->name('rajuk-approvals.print');
+
+    Route::resource('buildings', BuildingController::class)->names('buildings');
+
 });
 
 
