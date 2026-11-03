@@ -26,20 +26,14 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.building-client-assignments.update', $assignment->id) }}"
-              method="POST">
-
+        <form action="{{ route('admin.building-client-assignments.update', $assignment->id) }}" method="POST">
             @csrf
             @method('PUT')
-
             <div class="bca-form-grid">
-
                 <div class="bca-field full">
                     <label>Building <span>*</span></label>
-
                     <select name="building_id" id="building_id" required>
                         <option value="">Select Building</option>
-
                         @foreach($buildings as $building)
                             <option value="{{ $building->id }}"
                                     data-project="{{ $building->project_id }}"
@@ -60,7 +54,6 @@
 
                 <div class="bca-field full">
                     <label>Client <span>*</span></label>
-
                     <select name="client_id" id="client_id" required>
                         <option value="">Select Client</option>
 

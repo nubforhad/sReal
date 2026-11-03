@@ -17,6 +17,10 @@ use App\Http\Controllers\BuildingController;
 
 use App\Http\Controllers\BuildingClientAssignmentController;
 
+use App\Http\Controllers\ConstructionCostCategoryController;
+
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,6 +63,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('buildings/{building}/print', [BuildingController::class, 'print'])->name('buildings.print');
 
     Route::resource('building-client-assignments', BuildingClientAssignmentController::class)->except(['show'])->names('building-client-assignments');
+    Route::resource('construction-cost-categories', ConstructionCostCategoryController::class)->names('construction-cost-categories');
 
 });
 
