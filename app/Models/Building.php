@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Building extends Model
 {
@@ -59,4 +60,21 @@ class Building extends Model
     {
         return $this->belongsTo(RajukApproval::class);
     }
+
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Client::class,
+            'building_client_assignments'
+        )->withPivot([
+            'id',
+            'company_id',
+            'branch_id',
+            'project_id',
+            'assigned_at',
+            'status',
+            'remarks',
+        ])->withTimestamps();
+    }
+
 }

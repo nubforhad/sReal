@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Client extends Model
 {
@@ -74,4 +75,22 @@ class Client extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function buildings(): BelongsToMany
+{
+    return $this->belongsToMany(
+        Building::class,
+        'building_client_assignments'
+    )->withPivot([
+        'id',
+        'company_id',
+        'branch_id',
+        'project_id',
+        'assigned_at',
+        'status',
+        'remarks',
+    ])->withTimestamps();
+}
+
+
 }

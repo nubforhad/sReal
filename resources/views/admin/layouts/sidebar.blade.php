@@ -285,6 +285,14 @@
                         <i class="bi bi-building"></i>
                         <span> Buildings </span>
                     </a>
+
+                    <a href="{{ route('admin.building-client-assignments.index') }}" @click="sidebarOpen = false" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition
+                            {{ request()->routeIs('admin.building-client-assignments.*')
+                                ? 'bg-blue-50 font-medium text-blue-700'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                        <i class="bi bi-building"></i>
+                        <span> Building Client Assignments </span>
+                    </a>
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Floors
                     </span>
