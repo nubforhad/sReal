@@ -301,6 +301,14 @@
                         <i class="bi bi-building"></i>
                         <span> Construction Cost Categories </span>
                     </a>
+
+                    <a href="{{ route('admin.construction-costs.index') }}" @click="sidebarOpen = false" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition
+                            {{ request()->routeIs('admin.construction-costs.*')
+                                ? 'bg-blue-50 font-medium text-blue-700'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800' }}">
+                        <i class="bi bi-building"></i>
+                        <span> Construction Costs </span>
+                    </a>
                     <span class="block rounded-lg px-3 py-2 text-sm text-slate-400">
                         Floors
                     </span>

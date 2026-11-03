@@ -19,6 +19,8 @@ use App\Http\Controllers\BuildingClientAssignmentController;
 
 use App\Http\Controllers\ConstructionCostCategoryController;
 
+use App\Http\Controllers\ConstructionCostController;
+
 
 
 
@@ -64,6 +66,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('building-client-assignments', BuildingClientAssignmentController::class)->except(['show'])->names('building-client-assignments');
     Route::resource('construction-cost-categories', ConstructionCostCategoryController::class)->names('construction-cost-categories');
+    Route::resource('construction-costs', ConstructionCostController::class)->names('construction-costs');
 
 });
 
