@@ -218,19 +218,11 @@ class BuildingController extends Controller
             $query->where('project_id', $request->project_id);
         }
 
-        $buildings = $query->latest()->paginate(15)->withQueryString();
+        $buildings = $query->latest()
+            ->paginate(15)
+            ->withQueryString();
 
-        return view('admin.buildings.index', compact('buildings'));
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Create
-    |--------------------------------------------------------------------------
-    */
-
-    public function create()
-    {
+        // Filter dropdown data
         $companies = $this->scopedCompanies()
             ->orderBy('name')
             ->get();
@@ -242,6 +234,26 @@ class BuildingController extends Controller
         $projects = $this->scopedProjects()
             ->orderBy('project_name')
             ->get();
+
+        return view('admin.buildings.index', compact(
+            'buildings',
+            'companies',
+            'branches',
+            'projects'
+        ));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create
+    |--------------------------------------------------------------------------
+    */
+
+    public function create()
+    {
+        $companies = $this->scopedCompanies()->orderBy('name')->get();
+        $branches = $this->scopedBranches()->orderBy('name')->get();
+        $projects = $this->scopedProjects()->orderBy('project_name')->get();
 
         $rajukApprovals = RajukApproval::query()
             ->when(auth()->user()->company_id, function ($query, $companyId) {
@@ -261,22 +273,15 @@ class BuildingController extends Controller
         ));
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Store
-    |--------------------------------------------------------------------------
-    */
+    /* Store  */
 
     public function store(Request $request)
     {
         $validated = $this->validateBuilding($request);
-
         $validated['company_id'] = auth()->user()->company_id
             ?? $request->company_id;
-
         $validated['branch_id'] = auth()->user()->branch_id
             ?? $request->branch_id;
-
         if ($request->hasFile('building_image')) {
             $validated['building_image'] = $request
                 ->file('building_image')
@@ -291,9 +296,7 @@ class BuildingController extends Controller
 
         Building::create($validated);
 
-        return redirect()
-            ->route('admin.buildings.index')
-            ->with('success', 'Building created successfully.');
+        return redirect()->route('admin.buildings.index')->with('success', 'Building created successfully.');
     }
 
     /*
@@ -304,40 +307,24 @@ class BuildingController extends Controller
 
     public function show(Building $building)
     {
-        $building = $this->scopedBuildings()
-            ->with([
+        $building = $this->scopedBuildings()->with([
                 'company',
                 'branch',
                 'project',
                 'rajukApproval',
-            ])
-            ->findOrFail($building->id);
+            ])->findOrFail($building->id);
 
         return view('admin.buildings.show', compact('building'));
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Edit
-    |--------------------------------------------------------------------------
-    */
+    /*   Edit  */
 
     public function edit(Building $building)
     {
-        $building = $this->scopedBuildings()
-            ->findOrFail($building->id);
-
-        $companies = $this->scopedCompanies()
-            ->orderBy('name')
-            ->get();
-
-        $branches = $this->scopedBranches()
-            ->orderBy('name')
-            ->get();
-
-        $projects = $this->scopedProjects()
-            ->orderBy('project_name')
-            ->get();
+        $building = $this->scopedBuildings()->findOrFail($building->id);
+        $companies = $this->scopedCompanies()->orderBy('name')->get();
+        $branches = $this->scopedBranches()->orderBy('name')->get();
+        $projects = $this->scopedProjects()->orderBy('project_name')->get();
 
         $rajukApprovals = RajukApproval::query()
             ->where('company_id', $building->company_id)
@@ -361,54 +348,68 @@ class BuildingController extends Controller
     */
 
     public function update(Request $request, Building $building)
-    {
-        $building = $this->scopedBuildings()
-            ->findOrFail($building->id);
+{
+    // Logged-in user's company and branch scope check
+    $building = $this->scopedBuildings()
+        ->findOrFail($building->id);
 
-        $validated = $this->validateBuilding($request);
+    // Validate request
+    $validated = $this->validateBuilding($request);
 
-        $validated['company_id'] = auth()->user()->company_id
-            ?? $request->company_id;
+    // Company and Branch
+    $validated['company_id'] = auth()->user()->company_id
+        ?? $request->company_id;
 
-        $validated['branch_id'] = auth()->user()->branch_id
-            ?? $request->branch_id;
+    $validated['branch_id'] = auth()->user()->branch_id
+        ?? $request->branch_id;
 
-        if ($request->hasFile('building_image')) {
-            if ($building->building_image) {
-                Storage::disk('public')->delete(
-                    $building->building_image
-                );
-            }
+    // Keep old file paths
+    $oldImage = $building->building_image;
+    $oldDocument = $building->document;
 
-            $validated['building_image'] = $request
-                ->file('building_image')
-                ->store('buildings/images', 'public');
-        }
-
-        if ($request->hasFile('document')) {
-            if ($building->document) {
-                Storage::disk('public')->delete(
-                    $building->document
-                );
-            }
-
-            $validated['document'] = $request
-                ->file('document')
-                ->store('buildings/documents', 'public');
-        }
-
-        $building->update($validated);
-
-        return redirect()
-            ->route('admin.buildings.index')
-            ->with('success', 'Building updated successfully.');
+    // Upload new image
+    if ($request->hasFile('building_image')) {
+        $validated['building_image'] = $request
+            ->file('building_image')
+            ->store('buildings/images', 'public');
+    } else {
+        unset($validated['building_image']);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Destroy
-    |--------------------------------------------------------------------------
-    */
+    // Upload new document
+    if ($request->hasFile('document')) {
+        $validated['document'] = $request
+            ->file('document')
+            ->store('buildings/documents', 'public');
+    } else {
+        unset($validated['document']);
+    }
+
+    // Update database
+    $building->update($validated);
+
+    // Delete old image after successful update
+    if (
+        $request->hasFile('building_image') &&
+        $oldImage
+    ) {
+        Storage::disk('public')->delete($oldImage);
+    }
+
+    // Delete old document after successful update
+    if (
+        $request->hasFile('document') &&
+        $oldDocument
+    ) {
+        Storage::disk('public')->delete($oldDocument);
+    }
+
+    return redirect()
+        ->route('admin.buildings.index')
+        ->with('success', 'Building updated successfully.');
+}
+
+    /*  Destroy */
 
     public function destroy(Building $building)
     {
@@ -433,4 +434,18 @@ class BuildingController extends Controller
             ->route('admin.buildings.index')
             ->with('success', 'Building deleted successfully.');
     }
+
+    public function print(Building $building)
+    {
+        $building = $this->scopedBuildings()
+            ->with([
+                'company',
+                'branch',
+                'project',
+                'rajukApproval',
+            ])->findOrFail($building->id);
+        return view('admin.buildings.print', compact('building'));
+    }
+
+
 }

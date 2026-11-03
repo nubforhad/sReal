@@ -110,31 +110,18 @@
             ====================================== --}}
 
             <div x-data="{  open: {{ request()->routeIs('admin.users.*') ? 'true' : 'false' }} }">
-                <button type="button" @click="open = !open" class="group flex w-full items-center justify-between
-                           rounded-xl px-3 py-2.5
-                           text-sm font-medium text-slate-600
-                           transition hover:bg-slate-50 hover:text-slate-900">
-
+                <button type="button" @click="open = !open" class="group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
                     <span class="flex min-w-0 items-center gap-3">
-
                         <span class="flex h-8 w-8 shrink-0 items-center justify-center
                                    rounded-lg bg-slate-100 text-slate-500">
                             <i class="bi bi-people"></i>
                         </span>
-
                         <span>
                             User Management
                         </span>
-
                     </span>
-
-
-                    <i class="bi bi-chevron-down ml-2 text-[10px] text-slate-400
-                               transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
-
+                    <i class="bi bi-chevron-down ml-2 text-[10px] text-slate-400  transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
                 </button>
-
-
                 <div x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
                     <a href="{{ route('admin.users.index') }}" @click="sidebarOpen = false"
                         class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm
@@ -156,21 +143,16 @@
                            rounded-xl px-3 py-2.5
                            text-sm font-medium text-slate-600
                            transition hover:bg-slate-50 hover:text-slate-900">
-
                     <span class="flex items-center gap-3">
-
                         <span class="flex h-8 w-8 shrink-0 items-center justify-center
                                    rounded-lg bg-slate-100 text-slate-500">
                             <i class="bi bi-person-vcard"></i>
                         </span>
-
                         <span>
                             Client Management
                         </span>
                     </span>
-
-                    <i class="bi bi-chevron-down text-[10px] text-slate-400
-                               transition-transform" :class="{ 'rotate-180': open }"></i>
+                    <i class="bi bi-chevron-down text-[10px] text-slate-400 transition-transform" :class="{ 'rotate-180': open }"></i>
                 </button>
                 <div x-show="open" x-cloak class="mt-1 space-y-1 pl-11">
                     <!-- <span class=" rounded-lg px-3 py-2 text-sm text-slate-400">

@@ -54,6 +54,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('rajuk-approvals/{rajukApproval}/print', [RajukApprovalController::class, 'print'])->name('rajuk-approvals.print');
 
     Route::resource('buildings', BuildingController::class)->names('buildings');
+    Route::get('buildings/{building}/print', [BuildingController::class, 'print'])->name('buildings.print');
 
 });
 
