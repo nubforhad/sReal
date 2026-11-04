@@ -76,47 +76,33 @@
                             <td class="px-4 py-3">
                                 {{ $costs->firstItem() + $loop->index }}
                             </td>
-
                             <td class="px-4 py-3">
                                 {{ $cost->cost_date?->format('d M Y') }}
                             </td>
-
                             <td class="px-4 py-3 font-medium text-slate-800">
                                 {{ $cost->building->building_name ?? '-' }}
                             </td>
-
                             <td class="px-4 py-3">
                                 {{ $cost->client->name ?? '-' }}
                             </td>
-
                             <td class="px-4 py-3">
                                 {{ $cost->category->category_name ?? '-' }}
                             </td>
-
                             <td class="px-4 py-3 text-right font-semibold">
                                 ৳{{ number_format((float)$cost->amount, 2) }}
                             </td>
-
                             <td class="px-4 py-3">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('admin.construction-costs.show', $cost->id) }}"
-                                       class="rounded-md border border-slate-200 px-3 py-1.5 text-blue-600">
+                                    <a href="{{ route('admin.construction-costs.show', $cost->id) }}" class="rounded-md border border-slate-200 px-3 py-1.5 text-blue-600">
                                         View
                                     </a>
-
-                                    <a href="{{ route('admin.construction-costs.edit', $cost->id) }}"
-                                       class="rounded-md border border-slate-200 px-3 py-1.5 text-green-600">
+                                    <a href="{{ route('admin.construction-costs.edit', $cost->id) }}" class="rounded-md border border-slate-200 px-3 py-1.5 text-green-600">
                                         Edit
                                     </a>
-
-                                    <form action="{{ route('admin.construction-costs.destroy', $cost->id) }}"
-                                          method="POST"
-                                          onsubmit="return confirm('Are you sure you want to delete this cost entry?')">
+                                    <form action="{{ route('admin.construction-costs.destroy', $cost->id) }}" method="POST"  onsubmit="return confirm('Are you sure you want to delete this cost entry?')">
                                         @csrf
                                         @method('DELETE')
-
-                                        <button type="submit"
-                                                class="rounded-md border border-red-200 px-3 py-1.5 text-red-600">
+                                        <button type="submit" class="rounded-md border border-red-200 px-3 py-1.5 text-red-600">
                                             Delete
                                         </button>
                                     </form>

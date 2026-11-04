@@ -37,8 +37,7 @@ class ConstructionCostController extends Controller
             )
             ->when($user->branch_id, fn ($q) =>
                 $q->where('branch_id', $user->branch_id)
-            )
-            ->orderBy('project_name')
+            )->orderBy('project_name')
             ->get();
     }
 
@@ -52,9 +51,7 @@ class ConstructionCostController extends Controller
 
     private function categories()
     {
-        return $this->scope(
-            ConstructionCostCategory::where('status', 'active')
-        )->get();
+        return $this->scope( ConstructionCostCategory::where('status', 'active'))->get();
     }
 
     private function costs()
@@ -101,11 +98,9 @@ class ConstructionCostController extends Controller
             ->whereKey($data['project_id'])
             ->when($user->company_id, fn ($q) =>
                 $q->where('company_id', $user->company_id)
-            )
-            ->when($user->branch_id, fn ($q) =>
+            )->when($user->branch_id, fn ($q) =>
                 $q->where('branch_id', $user->branch_id)
-            )
-            ->firstOrFail();
+            )->firstOrFail();
 
         $building = Building::query()
             ->whereKey($data['building_id'])
@@ -194,28 +189,19 @@ class ConstructionCostController extends Controller
             $data['document'] = $request->file('document')
                 ->store('construction-costs', 'public');
         }
-
         ConstructionCost::create($data);
-
-        return redirect()
-            ->route('admin.construction-costs.index')
-            ->with('success', 'Construction cost added successfully.');
+        return redirect()->route('admin.construction-costs.index')->with('success', 'Construction cost added successfully.');
     }
 
     public function show(ConstructionCost $constructionCost)
     {
-        $cost = $this->costs()
-            ->whereKey($constructionCost->id)
-            ->firstOrFail();
-
+        $cost = $this->costs()->whereKey($constructionCost->id)->firstOrFail();
         return view('admin.construction-costs.show', compact('cost'));
     }
 
     public function edit(ConstructionCost $constructionCost)
     {
-        $cost = $this->costs()
-            ->whereKey($constructionCost->id)
-            ->firstOrFail();
+        $cost = $this->costs()->whereKey($constructionCost->id)->firstOrFail();
 
         return view('admin.construction-costs.edit', [
             'cost' => $cost,
@@ -230,25 +216,18 @@ class ConstructionCostController extends Controller
         $cost = $this->costs()
             ->whereKey($constructionCost->id)
             ->firstOrFail();
-
         $data = $this->validateCost($request);
-
         if ($request->hasFile('document')) {
             if ($cost->document) {
                 Storage::disk('public')->delete($cost->document);
             }
-
             $data['document'] = $request->file('document')
                 ->store('construction-costs', 'public');
         } else {
             unset($data['document']);
         }
-
         $cost->update($data);
-
-        return redirect()
-            ->route('admin.construction-costs.index')
-            ->with('success', 'Construction cost updated successfully.');
+        return redirect()->route('admin.construction-costs.index')->with('success', 'Construction cost updated successfully.');
     }
 
     public function destroy(ConstructionCost $constructionCost)
@@ -256,15 +235,10 @@ class ConstructionCostController extends Controller
         $cost = $this->costs()
             ->whereKey($constructionCost->id)
             ->firstOrFail();
-
         if ($cost->document) {
             Storage::disk('public')->delete($cost->document);
         }
-
         $cost->delete();
-
-        return redirect()
-            ->route('admin.construction-costs.index')
-            ->with('success', 'Construction cost deleted successfully.');
+        return redirect()->route('admin.construction-costs.index')->with('success', 'Construction cost deleted successfully.');
     }
 }
