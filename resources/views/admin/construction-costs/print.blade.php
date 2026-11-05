@@ -355,10 +355,7 @@
     </template>
 
     <template id="stamp">
-      <svg
-        class="stamp"
-        viewBox="0 0 210 170"
-        fill="none"
+      <svg class="stamp" viewBox="0 0 210 170" fill="none"
         stroke="#3b2fa8"
         xmlns="http://www.w3.org/2000/svg"
       >

@@ -3,33 +3,27 @@
 
 @section('content')
 <div class="p-4 space-y-5">
-
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
             <h2 class="text-xl font-bold text-slate-800">Construction Cost Entry</h2>
             <p class="text-sm text-slate-500">Building and client-wise construction expenses.</p>
         </div>
-
         <a href="{{ route('admin.construction-costs.create') }}"
            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
             + Add Construction Cost
         </a>
     </div>
-
     @if(session('success'))
         <div class="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
             {{ session('success') }}
         </div>
     @endif
-
     @if($errors->any())
         <div class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
             {{ $errors->first() }}
         </div>
     @endif
-
     <form method="GET" class="flex flex-wrap gap-3 rounded-xl border border-slate-200 bg-white p-4">
-
         <select name="project_id" class="rounded-lg border border-slate-200 px-3 py-2 text-sm">
             <option value="">All Projects</option>
             @foreach($projects as $project)
@@ -38,23 +32,15 @@
                 </option>
             @endforeach
         </select>
-
-        <input type="date" name="from_date" value="{{ request('from_date') }}"
-               class="rounded-lg border border-slate-200 px-3 py-2 text-sm">
-
-        <input type="date" name="to_date" value="{{ request('to_date') }}"
-               class="rounded-lg border border-slate-200 px-3 py-2 text-sm">
-
+        <input type="date" name="from_date" value="{{ request('from_date') }}" class="rounded-lg border border-slate-200 px-3 py-2 text-sm">
+        <input type="date" name="to_date" value="{{ request('to_date') }}"  class="rounded-lg border border-slate-200 px-3 py-2 text-sm">
         <button class="rounded-lg bg-slate-800 px-4 py-2 text-sm text-white">
             Filter
         </button>
-
-        <a href="{{ route('admin.construction-costs.index') }}"
-           class="rounded-lg border border-slate-200 px-4 py-2 text-sm">
+        <a href="{{ route('admin.construction-costs.index') }}" class="rounded-lg border border-slate-200 px-4 py-2 text-sm">
             Reset
         </a>
     </form>
-
     <div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
@@ -119,7 +105,6 @@
                 </tbody>
             </table>
         </div>
-
         <div class="border-t border-slate-200 p-4">
             {{ $costs->links() }}
         </div>
