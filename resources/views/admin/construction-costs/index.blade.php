@@ -79,9 +79,16 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex justify-end gap-2">
+    
+                                    
+                                    <a href="{{ route('admin.construction-costs.print', $cost->id) }}" target="_blank" class="rounded-md border border-slate-200 px-3 py-1.5 text-blue-600">
+                                        Print
+                                    </a>
+                                    
                                     <a href="{{ route('admin.construction-costs.show', $cost->id) }}" class="rounded-md border border-slate-200 px-3 py-1.5 text-blue-600">
                                         View
                                     </a>
+
                                     <a href="{{ route('admin.construction-costs.edit', $cost->id) }}" class="rounded-md border border-slate-200 px-3 py-1.5 text-green-600">
                                         Edit
                                     </a>

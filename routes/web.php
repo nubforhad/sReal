@@ -67,6 +67,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('building-client-assignments', BuildingClientAssignmentController::class)->except(['show'])->names('building-client-assignments');
     Route::resource('construction-cost-categories', ConstructionCostCategoryController::class)->names('construction-cost-categories');
     Route::resource('construction-costs', ConstructionCostController::class)->names('construction-costs');
+    Route::get('construction-costs/{constructionCost}/print', [ConstructionCostController::class, 'print'])->name('construction-costs.print');
 
 });
 

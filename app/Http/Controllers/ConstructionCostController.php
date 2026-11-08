@@ -241,4 +241,15 @@ class ConstructionCostController extends Controller
         $cost->delete();
         return redirect()->route('admin.construction-costs.index')->with('success', 'Construction cost deleted successfully.');
     }
+
+
+    public function print(ConstructionCost $constructionCost)
+    {
+        $cost = $this->costs()
+            ->whereKey($constructionCost->id)
+            ->firstOrFail();
+
+        return view('admin.construction-costs.print', compact('cost'));
+    }
+
 }

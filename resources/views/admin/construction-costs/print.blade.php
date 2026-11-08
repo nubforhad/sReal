@@ -293,7 +293,7 @@
         <div class="hdr">
           <div class="brand">
             <div class="logo-row">
-              <div class="safe"><small>COMMUNITY</small>SAFE</div>
+              <div class="safe"><small>COMMUNITY SAFE</small></div>
               <div class="emb"></div>
               <div class="co">SAFE COMMUNITY REAL ESTATE LTD.</div>
             </div>
