@@ -341,26 +341,17 @@
 
                     <div class="edit-field">
                         <label class="form-label">Construction Start Date</label>
-                        <input type="date"
-                               name="construction_start_date"
-                               class="form-control"
-                               value="{{ old('construction_start_date', $building->construction_start_date?->format('Y-m-d')) }}">
+                        <input type="date" name="construction_start_date"  class="form-control" value="{{ old('construction_start_date', $building->construction_start_date?->format('Y-m-d')) }}">
                     </div>
 
                     <div class="edit-field">
                         <label class="form-label">Expected Completion Date</label>
-                        <input type="date"
-                               name="expected_completion_date"
-                               class="form-control"
-                               value="{{ old('expected_completion_date', $building->expected_completion_date?->format('Y-m-d')) }}">
+                        <input type="date" name="expected_completion_date" class="form-control" value="{{ old('expected_completion_date', $building->expected_completion_date?->format('Y-m-d')) }}">
                     </div>
 
                     <div class="edit-field">
                         <label class="form-label">Actual Completion Date</label>
-                        <input type="date"
-                               name="actual_completion_date"
-                               class="form-control"
-                               value="{{ old('actual_completion_date', $building->actual_completion_date?->format('Y-m-d')) }}">
+                        <input type="date" name="actual_completion_date" class="form-control" value="{{ old('actual_completion_date', $building->actual_completion_date?->format('Y-m-d')) }}">
                     </div>
 
                     <div class="edit-field">

@@ -42,20 +42,12 @@ class ClientController extends Controller
             })
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', $request->status);
-            })
-            ->latest()
+            })->latest()
             ->paginate(15)
             ->withQueryString();
 
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        $branches = Branch::where('status', true)
-            ->with('company')
-            ->orderBy('name')
-            ->get();
-
+        $companies = Company::where('status', true)->orderBy('name')->get();
+        $branches = Branch::where('status', true)->with('company')->orderBy('name')->get();
         $projects = Project::with(['company', 'branch'])
             ->whereIn('status', [
                 'planning',
@@ -74,15 +66,8 @@ class ClientController extends Controller
 
     public function create()
     {
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        $branches = Branch::where('status', true)
-            ->with('company')
-            ->orderBy('name')
-            ->get();
-
+        $companies = Company::where('status', true)->orderBy('name')->get();
+        $branches = Branch::where('status', true)->with('company')->orderBy('name')->get();
         $projects = Project::with(['company', 'branch'])
             ->whereIn('status', [
                 'planning',
@@ -273,9 +258,7 @@ class ClientController extends Controller
         ]);
 
         // Branch must belong to selected company
-        $branchBelongsToCompany = Branch::where('id', $validated['branch_id'])
-            ->where('company_id', $validated['company_id'])
-            ->exists();
+        $branchBelongsToCompany = Branch::where('id', $validated['branch_id'])->where('company_id', $validated['company_id'])->exists();
 
         if (!$branchBelongsToCompany) {
             return back()
@@ -286,10 +269,7 @@ class ClientController extends Controller
         }
 
         // Project must belong to selected company and branch
-        $projectBelongsToBranch = Project::where('id', $validated['project_id'])
-            ->where('company_id', $validated['company_id'])
-            ->where('branch_id', $validated['branch_id'])
-            ->exists();
+        $projectBelongsToBranch = Project::where('id', $validated['project_id'])->where('company_id', $validated['company_id'])->where('branch_id', $validated['branch_id'])->exists();
 
         if (!$projectBelongsToBranch) {
             return back()
@@ -416,15 +396,8 @@ class ClientController extends Controller
 
     public function edit(Client $client)
     {
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        $branches = Branch::where('status', true)
-            ->with('company')
-            ->orderBy('name')
-            ->get();
-
+        $companies = Company::where('status', true)->orderBy('name')->get();
+        $branches = Branch::where('status', true)->with('company')->orderBy('name')->get();
         $projects = Project::with(['company', 'branch'])
             ->whereIn('status', [
                 'planning',
@@ -693,7 +666,6 @@ class ClientController extends Controller
                 if ($client->nid_document) {
                     Storage::disk('public')->delete($client->nid_document);
                 }
-
                 $client->update([
                     'nid_document' => $request->file('nid_document')
                         ->store('clients/nid', 'public'),
@@ -702,11 +674,9 @@ class ClientController extends Controller
 
             // Replace other document
             if ($request->hasFile('other_document')) {
-
                 if ($client->other_document) {
                     Storage::disk('public')->delete($client->other_document);
                 }
-
                 $client->update([
                     'other_document' => $request->file('other_document')
                         ->store('clients/documents', 'public'),
@@ -715,7 +685,6 @@ class ClientController extends Controller
 
             // Replace nominee photo
             if ($request->hasFile('nominee_photo')) {
-
                 if ($client->nominee_photo) {
                     Storage::disk('public')->delete($client->nominee_photo);
                 }
@@ -728,11 +697,9 @@ class ClientController extends Controller
 
             // Replace nominee NID
             if ($request->hasFile('nominee_nid_document')) {
-
                 if ($client->nominee_nid_document) {
                     Storage::disk('public')->delete($client->nominee_nid_document);
                 }
-
                 $client->update([
                     'nominee_nid_document' => $request->file('nominee_nid_document')
                         ->store('clients/nominees/nid', 'public'),
@@ -745,7 +712,6 @@ class ClientController extends Controller
                 if ($client->nominee_other_document) {
                     Storage::disk('public')->delete($client->nominee_other_document);
                 }
-
                 $client->update([
                     'nominee_other_document' => $request->file('nominee_other_document')
                         ->store('clients/nominees/documents', 'public'),
@@ -753,9 +719,7 @@ class ClientController extends Controller
             }
         });
 
-        return redirect()
-            ->route('admin.clients.index')
-            ->with('success', 'Client updated successfully.');
+        return redirect()->route('admin.clients.index')->with('success', 'Client updated successfully.');
     }
 
     public function destroy(Client $client)
@@ -775,11 +739,7 @@ class ClientController extends Controller
                 Storage::disk('public')->delete($file);
             }
         }
-
         $client->delete();
-
-        return redirect()
-            ->route('admin.clients.index')
-            ->with('success', 'Client deleted successfully.');
+        return redirect()->route('admin.clients.index')->with('success', 'Client deleted successfully.');
     }
 } 

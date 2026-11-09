@@ -13,13 +13,26 @@ class ConstructionCost extends Model
         'project_id',
         'building_id',
         'client_id',
+        'receipt_no',
         'building_client_assignment_id',
         'construction_cost_category_id',
+
+        // Cost Information
         'cost_date',
         'payment_date',
         'amount',
         'description',
         'document',
+
+        // Money Receipt Information
+        'purpose',
+        'payment_method',
+        'cheque_no',
+        'bank_name',
+        'bank_branch',
+        'amount_words',
+
+        // User
         'created_by',
     ];
 
@@ -61,7 +74,7 @@ class ConstructionCost extends Model
             'building_client_assignment_id'
         );
     }
-
+ 
     public function category(): BelongsTo
     {
         return $this->belongsTo(

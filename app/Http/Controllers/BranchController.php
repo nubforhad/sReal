@@ -12,19 +12,13 @@ class BranchController extends Controller
 {
     public function index()
     {
-        $branches = Branch::with('company')
-            ->latest()
-            ->paginate(15);
-
+        $branches = Branch::with('company')->latest()->paginate(15);
         return view('admin.branches.index', compact('branches'));
     }
 
     public function create()
     {
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
+        $companies = Company::where('status', true)->orderBy('name')->get();
         return view('admin.branches.create', compact('companies'));
     }
 
@@ -79,25 +73,18 @@ class BranchController extends Controller
         ]);
 
         Branch::create($validated);
-
-        return redirect()
-            ->route('admin.branches.index')
-            ->with('success', 'Branch created successfully.');
+        return redirect()->route('admin.branches.index')->with('success', 'Branch created successfully.');
     }
 
     public function show(Branch $branch)
     {
         $branch->load('company');
-
         return view('admin.branches.show', compact('branch'));
     }
 
     public function edit(Branch $branch)
     {
-        $companies = Company::where('status', true)
-            ->orderBy('name')
-            ->get();
-
+        $companies = Company::where('status', true)->orderBy('name')->get();
         return view('admin.branches.edit', compact(
             'branch',
             'companies'
@@ -157,18 +144,12 @@ class BranchController extends Controller
         ]);
 
         $branch->update($validated);
-
-        return redirect()
-            ->route('admin.branches.index')
-            ->with('success', 'Branch updated successfully.');
+        return redirect()->route('admin.branches.index')->with('success', 'Branch updated successfully.');
     }
 
     public function destroy(Branch $branch)
     {
         $branch->delete();
-
-        return redirect()
-            ->route('admin.branches.index')
-            ->with('success', 'Branch deleted successfully.');
+        return redirect()->route('admin.branches.index')->with('success', 'Branch deleted successfully.');
     }
 }

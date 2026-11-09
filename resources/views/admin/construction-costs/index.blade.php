@@ -47,6 +47,7 @@
                 <thead class="bg-slate-50 text-xs uppercase text-slate-500">
                     <tr>
                         <th class="px-4 py-3">#</th>
+                        <th class="px-4 py-3">Receipt No</th>
                         <th class="px-4 py-3">Date</th>
                         <th class="px-4 py-3">Building</th>
                         <th class="px-4 py-3">Client</th>
@@ -61,6 +62,9 @@
                         <tr class="hover:bg-slate-50">
                             <td class="px-4 py-3">
                                 {{ $costs->firstItem() + $loop->index }}
+                            </td>
+                            <td class="px-4 py-3">
+                                {{ $cost->receipt_no }}
                             </td>
                             <td class="px-4 py-3">
                                 {{ $cost->cost_date?->format('d M Y') }}
