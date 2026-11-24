@@ -7,13 +7,14 @@
         <a href="{{ route('dashboard') }}" @click="sidebarOpen = false" class="flex min-w-0 items-center gap-3">
             {{-- Logo --}}
             <div
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-200">
-                <i class="bi bi-buildings-fill text-lg"></i>
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl  text-white shadow-sm shadow-blue-200">
+                {{-- <i class="bi bi-buildings-fill text-lg"></i> --}}
+                <img src="{{ asset('assets/images/fav1.png') }}" alt="Logo" class="h-8 w-auto">
             </div>
             {{-- Logo Text --}}
             <div class="min-w-0">
                 <h1 class="truncate text-sm font-bold tracking-tight text-slate-800">
-                    Real Estate ERP
+                   Safe Real Estate ERP
                 </h1>
                 <p class="truncate text-[11px] font-medium text-slate-400">
                     Management System
@@ -448,8 +449,9 @@
     <div class="shrink-0 border-t border-slate-200 bg-white p-3">
         <div class="rounded-xl bg-slate-50 px-3 py-2.5">
             <div class="flex items-center gap-2.5">
-                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                    <i class="bi bi-shield-check"></i>
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-blue-600">
+                    {{-- <i class="bi bi-shield-check"></i> --}}
+                    <img src="{{ asset('assets/images/fav1.png') }}" alt="Logo" class="h-5 w-auto">
                 </div>
                 <div class="min-w-0">
                     <p class="truncate text-xs font-semibold text-slate-700">

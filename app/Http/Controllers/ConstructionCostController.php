@@ -10,6 +10,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ConstructionCostController extends Controller
 {
@@ -122,6 +123,16 @@ class ConstructionCostController extends Controller
 
         return $receiptNo;
     }
+    // private function generateReceiptNo(): string
+    // {
+    //     do {
+    //         $receiptNo = 'SCG-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+    //     } while (
+    //         ConstructionCost::where('receipt_no', $receiptNo)->exists()
+    //     );
+
+    //     return $receiptNo;
+    // }
 
     /*
     |--------------------------------------------------------------------------
@@ -133,6 +144,13 @@ class ConstructionCostController extends Controller
     {
         $data = $request->validate([
 
+        'receipt_no' => [
+            'required',
+            'string',
+            'max:12',
+            'regex:/^[A-Za-z0-9\/-]+$/',
+            Rule::unique('construction_costs', 'receipt_no'),
+        ],
             // Project & Building
             'project_id' => [
                 'required',
@@ -377,25 +395,27 @@ class ConstructionCostController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function store(Request $request)
-    {
-        $data = $this->validateCost($request);
+ public function store(Request $request)
+{
+    $data = $this->validateCost($request);
 
-        // Generate receipt number automatically
-        $data['receipt_no'] = $this->generateReceiptNo();
+    // $request->validate([
+    //     'receipt_no' => [
+    //         'required',
+    //         'digits:16',
+    //         'regex:/^[a-zA-Z]{2}[0-9]{14}$/',
+    //         Rule::unique('construction_costs', 'receipt_no'),
+    //     ],
+    // ]);
+    // $data['receipt_no'] = $request->receipt_no;
 
-        // Store document
-        if ($request->hasFile('document')) {
-            $data['document'] = $request->file('document')
-                ->store('construction-costs', 'public');
-        }
-
-        ConstructionCost::create($data);
-
-        return redirect()
-            ->route('admin.construction-costs.index')
-            ->with('success', 'Payment received and Money Receipt created successfully.');
+    if ($request->hasFile('document')) {
+        $data['document'] = $request->file('document')
+            ->store('construction-costs', 'public');
     }
+    ConstructionCost::create($data);
+    return redirect()->route('admin.construction-costs.index')->with('success', 'Money Receipt created successfully.');
+}
 
     /*
     |--------------------------------------------------------------------------

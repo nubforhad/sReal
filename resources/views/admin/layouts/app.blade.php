@@ -5,9 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>
-        @yield('title', 'Dashboard') - Real Estate ERP
-    </title>
+   <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/fav1.png') }}">
+    <title> @yield('title', 'Dashboard') - Safe Real Estate ERP </title>
     {{-- Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- Bootstrap Icons --}}
@@ -115,3 +114,7 @@
 </body>
 
 </html> 
+
+
+
+

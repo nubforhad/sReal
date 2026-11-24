@@ -8,7 +8,7 @@
     <style>
         @page {
             size: A4 landscape;
-            margin: 6mm;
+            margin: 1mm;
         }
 
         * {
@@ -78,7 +78,7 @@
             width: 50%;
             height: 122mm;
             background: #f4f0dc;
-            padding: 5mm 6mm 4mm;
+            padding: 2mm 2mm 2mm;
             position: relative;
             overflow: hidden;
         }
@@ -90,7 +90,7 @@
         .watermark {
             position: absolute;
             right: 52mm;
-            top: 68mm;
+            top: 55mm;
             width: 42mm;
             opacity: .07;
         }
@@ -171,7 +171,7 @@
         }
 
         .meta-no strong {
-            font-size: 15pt;
+            font-size: 12pt;
             font-weight: normal;
             letter-spacing: 1px;
         }
@@ -358,7 +358,7 @@
             $throughTxt .= ' / Cheque/Transaction No: ' . $cost->cheque_no;
         }
 
-        $copies = ['Customer Copy', 'Office Copy'];
+        $copies = ['Office Copy', 'Customer Copy'];
     @endphp
 
     <div class="sheet">
@@ -367,30 +367,17 @@
             @foreach($copies as $copy)
 
                 <div class="receipt">
-
                     <span class="copy-tag">{{ $copy }}</span>
-
-                    <img
-                        class="watermark"
-                        src="{{ asset('assets/images/logo333.png') }}"
-                        alt=""
-                    >
-
+                    <img class="watermark" src="{{ asset('assets/images/logo333.png') }}" alt="watermark">
                     {{-- Header --}}
                     <div class="header">
-
                         <div>
                             <div class="brand">
-                                <img
-                                    src="{{ asset('assets/images/logo333.png') }}"
-                                    alt="logo"
-                                >
-
+                                <img src="{{ asset('assets/images/logo333.png') }}" alt="logo">
                                 <div class="brand-name">
                                     SAFE COMMUNITY GROUP
                                 </div>
                             </div>
-
                             <div class="brand-address">
                                 Anowar Plaza (2<sup>nd</sup> Floor),
                                 Mintu Chattar, Matuail, Demra, Dhaka.
@@ -399,71 +386,51 @@
                         </div>
 
                         <div class="garden-box">
-
                             <div class="garden-title">
                                 SAFE GARDEN
                             </div>
-
                             <div class="garden-body">
                                 {{ $cost->project?->project_name }}
                             </div>
-
                         </div>
-
                     </div>
-
                     {{-- No / Title / Date --}}
                     <div class="meta">
-
-                        <div class="meta-no">
-                            No.
-                            <strong>{{ $cost->receipt_no }}</strong>
-                        </div>
-
+                        <div class="meta-no"> No. <strong>{{ $cost->receipt_no }}</strong> </div>
                         <div class="title">
                             Money Receipt
                         </div>
-
                         <div class="date-wrap">
                             Date :
-
                             <div class="date-boxes">
                                 <span>{{ $date?->format('d') }}</span>
                                 <span>{{ $date?->format('m') }}</span>
                                 <span>{{ $date?->format('Y') }}</span>
                             </div>
                         </div>
-
                     </div>
-
                     {{-- Fields --}}
                     <div class="lines">
-
                         <div class="row">
                             <span class="label">
                                 Mr./Mrs./Miss. :
                             </span>
-
                             <span class="fill">
                                 {{ $client?->name }}
                             </span>
                         </div>
-
                         <div class="row">
                             <span class="label">
                                 Address :
                             </span>
-
                             <span class="fill">
                                 {{ $address }}
                             </span>
                         </div>
-
                         <div class="row">
                             <span class="label">
                                 Customer ID. No. :
                             </span>
-
                             <span class="fill">
                                 {{ $customerId }}
                             </span>

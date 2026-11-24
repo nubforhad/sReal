@@ -78,19 +78,7 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">
-                        Receipt No
-                    </label>
-
-                    <input
-                        type="text"
-                        value="Auto Generated"
-                        readonly
-                        class="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-slate-500"
-                    >
-                </div>
-
+             
                 {{-- Assigned Client --}}
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">
@@ -143,6 +131,32 @@
                         placeholder="Automatic Client Address"></textarea>
                 </div>
 
+                   <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Memo Number <span class="text-red-500">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="receipt_no"
+                        value="{{ old('receipt_no') }}"
+                        maxlength="12"
+                        pattern="[A-Za-z0-9/-]{1,12}"
+                        placeholder="Enter Memo Number"
+                        required
+                        class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                    >
+
+                    @error('receipt_no')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+
+                    <p class="mt-1 text-xs text-slate-500">
+                        Maximum 12 characters. Letters, numbers, - and / allowed.
+                    </p>
+                </div>
+
+
             </div>
         </div>
 
@@ -154,25 +168,19 @@
             </h3>
 
             <div class="grid gap-4 sm:grid-cols-2">
-
                 {{-- Purpose --}}
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">
                         Purpose *
                     </label>
-
                     <select name="purpose" required class="w-full rounded-lg border border-slate-200 px-3 py-2">
-
                         <option value="">Select Purpose</option>
-
                         @foreach(['Booking', 'Down Payment', 'Installment', 'Others'] as $purpose)
                         <option value="{{ $purpose }}" @selected(old('purpose')==$purpose)>
                             {{ $purpose }}
                         </option>
                         @endforeach
-
                     </select>
-
                     @error('purpose')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
