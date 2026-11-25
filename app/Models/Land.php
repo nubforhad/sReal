@@ -29,6 +29,7 @@ class Land extends Model
         'status',
         'description',
         'remarks',
+        'total_share',
     ];
     protected $casts = [
         'purchase_date' => 'date',

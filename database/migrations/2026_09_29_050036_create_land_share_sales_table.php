@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('land_id')->constrained('lands')->restrictOnDelete();
             $table->foreignId('client_id')->constrained('clients')->restrictOnDelete();
             /*  Sale Information */
+            $table->string('total_share')->nullable();
             $table->string('sale_code');
             $table->date('sale_date');
             $table->decimal('share_size', 12, 4);

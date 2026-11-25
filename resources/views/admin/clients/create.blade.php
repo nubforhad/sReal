@@ -202,32 +202,16 @@
                     <label class="mb-1.5 block text-sm font-medium text-slate-700">
                         Client Name <span class="text-red-500">*</span>
                     </label>
-
-                    <input type="text"
-                           name="name"
-                           value="{{ old('name') }}"
-                           required
-                           placeholder="Enter client name"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm
-                                  focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-
+                    <input type="text" name="name" value="{{ old('name') }}" required placeholder="Enter client name"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
                     @error('name')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
-
                 {{-- Father --}}
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-slate-700">
-                        Father's Name
-                    </label>
-
-                    <input type="text"
-                           name="father_name"
-                           value="{{ old('father_name') }}"
-                           placeholder="Father's name"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm
+                    <label class="mb-1.5 block text-sm font-medium text-slate-700">  Father's Name </label>
+                    <input type="text" name="father_name"  value="{{ old('father_name') }}"  placeholder="Father's name" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm
                                   focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
                 </div>
 

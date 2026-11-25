@@ -159,6 +159,11 @@ class LandController extends Controller
                 'string',
                 'max:100',
             ],
+            'total_share' => [
+                'nullable',
+                'string',
+                'max:25',
+            ],
 
             'total_land_size' => [
                 'nullable',
@@ -419,6 +424,12 @@ class LandController extends Controller
                 'nullable',
                 'string',
                 'max:100',
+            ],
+
+            'total_share' => [
+                'nullable',
+                'string',
+                'max:25',
             ],
 
             'total_land_size' => [

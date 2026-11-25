@@ -560,9 +560,7 @@ class LandShareSaleController extends Controller
             * (float) $validated['price_per_unit'];
 
         if (abs($calculatedPrice - (float) $validated['land_share_price']) > 0.01) {
-            return back()
-                ->withInput()
-                ->withErrors([
+            return back()->withInput()->withErrors([
                     'land_share_price' => 'Land share price must equal share size × price per unit.',
                 ]);
         }
@@ -590,10 +588,7 @@ class LandShareSaleController extends Controller
         |--------------------------------------------------------------------------
         */
         if ($oldLand) {
-            $oldSoldShare = LandShareSale::where('land_id', $oldLand->id)
-                ->where('status', '!=', 'cancelled')
-                ->sum('share_size');
-
+            $oldSoldShare = LandShareSale::where('land_id', $oldLand->id)->where('status', '!=', 'cancelled')->sum('share_size');
             if (
                 $oldLand->total_land_size !== null
                 && $oldSoldShare >= (float) $oldLand->total_land_size

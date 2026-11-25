@@ -394,14 +394,19 @@
                                         <span class="font-semibold text-slate-700">
                                             {{ number_format((float) $land->total_land_size, 4) }}
                                         </span>
-
                                         <span class="text-xs text-slate-500">
                                             {{ $land->land_unit }}
                                         </span>
-
                                     @else
                                         <span class="text-slate-400">—</span>
                                     @endif
+                                    <span class="text-xs text-slate-500">
+                                        @if($land->total_share)
+                                            <div class="mt-1 text-xs text-red-500">
+                                                Total Share: {{ $land->total_share }}
+                                            </div>
+                                        @endif
+                                    </span>
 
                                 </td>
 

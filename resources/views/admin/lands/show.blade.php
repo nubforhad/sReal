@@ -210,6 +210,13 @@
                         —
                     @endif
                 </p>
+
+                <p class="mt-1 text-sm text-red-500">
+                    @if($land->total_share !== null)
+                     Total share: {{ $land->total_share ?: '—' }}
+                    @endif
+                </p>
+
             </div>
             <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
                 <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
